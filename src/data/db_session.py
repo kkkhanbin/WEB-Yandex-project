@@ -14,6 +14,8 @@ def global_init(db_file):
     if __factory:
         return
 
+    print(db_file)
+
     if not db_file or not db_file.strip():
         raise Exception("Необходимо указать файл базы данных.")
 
