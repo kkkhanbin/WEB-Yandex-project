@@ -1,0 +1,17 @@
+body {
+    font-family: 'Nunito', sans-serif;
+    padding-bottom: 20px;
+}
+
+.content {
+    margin-top: 1.5%;
+}
+
+p {
+    font-size: 140%;
+}
+
+.search-line > input, button {
+    display: inline-block;
+    white-space: nowrap
+}

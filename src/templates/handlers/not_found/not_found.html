@@ -1,0 +1,18 @@
+{% extends "handlers/handler.html" %}
+
+{% block head %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/handlers/not_found/not_found.css') }}">
+
+{% endblock %}
+
+{% block error %}
+
+<h3>
+    Страница не найдена
+</h3>
+<p>
+    Страница устарела, была удалена или не существовала вовсе
+</p>
+
+{% endblock %}

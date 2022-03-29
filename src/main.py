@@ -1,7 +1,8 @@
 import os
 
-from src import app
 from waitress import serve
+
+from src import app
 
 
 def main():

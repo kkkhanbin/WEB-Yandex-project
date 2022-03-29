@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/handlers/handler.css') }}">
+
+{% endblock %}
+
+{% block content %}
+
+{% block error %}{% endblock %}
+
+<form action="/">
+    <button class="btn btn-outline-secondary">Вернуться на главную</button>
+</form>
+
+{% endblock %}
