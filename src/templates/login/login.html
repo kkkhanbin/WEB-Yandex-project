@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login/login.css') }}">
+
+{% endblock %}
+
+{% block content %}
+<h1 class="title">
+    Авторизация пользователя
+</h1>
+
+<form action="" method="post" class="form-float" enctype="multipart/form-data">
+    {{ form.csrf_token() }}
+
+    <div class="errors">
+        {% for key in form.errors %}
+            <div class="alert alert-danger" role="alert">
+                {{form.errors[key]|join(' | ')}}
+            </div>
+        {% endfor %}
+
+        {% for key in errors %}
+            <div class="alert alert-danger" role="alert">
+                {{errors[key]|join(' | ')}}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3 row register-item">
+        {{ form.login.label(class='col-sm-2 col-form-label') }}
+        <div class="col-sm-10">
+            {{ form.login(class='form-control') }}
+        </div>
+    </div>
+
+    <div class="mb-3 row register-item">
+        {{ form.password.label(class='col-sm-2 col-form-label') }}
+        <div class="col-sm-10">
+            {{ form.password(class='form-control') }}
+        </div>
+    </div>
+
+    <div class="mb-3 row register-item">
+        {{ form.remember_me.label(class='col-sm-2 col-form-label') }}
+        <div class="col-sm-10 form-check form-switch">
+            {{ form.remember_me(role='switch', class='form-check-input', type="checkbox") }}
+        </div>
+    </div>
+
+    {{ form.submit(type="submit", class="form-control register-item btn btn-primary") }}
+</form>
+
+{% endblock %}

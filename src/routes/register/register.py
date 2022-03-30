@@ -20,6 +20,7 @@ def register():
     if form.validate_on_submit():
         user = User()
         form.password.data = generate_password_hash(form.password.data)
+        form.avatar_image.data = None  # Заглушка
         user.load_fields(form)
 
         session.add(user)
