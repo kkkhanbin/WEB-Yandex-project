@@ -1,34 +1,21 @@
 import logging
 
+from dotenv import load_dotenv
+load_dotenv('.env')
+
 from flask import Flask
-from flask_login import LoginManager
 from flask_restful import Api
 
-from src.data.models import User
-from src.data import create_session, global_init
-from src.config import Config
 from src.routes import routes_bp
 from src.routes.handlers import handlers_bp
+from src.config import ProductionConfig, register_blueprints
+from src.config.jinja import TESTS, add_tests
+from src.config.rest import add_resources
+from src.config.login import login_manager
 
-
-def add_resources(api: Api, *resources) -> None:
-    """
-    Добавляет ресурсы в Api
-
-    :param api: Экземпляр класса flask_restful.Api, которому будут добавляться
-            ресурсы
-    :param resources: Коллекция, где первое значение - добавляемый ресурс,
-            а второе - его url
-    :return: None
-    """
-
-    for resource, route in resources:
-        api.add_resource(resource, route)
-
-
-# Создание приложения
+# Создание приложения и его конфигурация
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config.from_object(ProductionConfig)
 
 # Регистрация REST Api
 api = Api(app)
@@ -36,20 +23,15 @@ api = Api(app)
 resources = ()
 add_resources(api, *resources)
 
+# Конфигурация jinja
+add_tests(app.jinja_env, TESTS)
+
 # Регистрация Blueprint`ов
-app.register_blueprint(routes_bp)
-app.register_blueprint(handlers_bp)
+blueprints = (routes_bp, handlers_bp)
+register_blueprints(app, *blueprints)
 
 # login manager
-login_manager = LoginManager()
 login_manager.init_app(app)
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    db_sess = create_session()
-    return db_sess.query(User).get(user_id)
-
 
 # Конфигурация модуля logging
 logging.basicConfig(level=logging.INFO)

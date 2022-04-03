@@ -15,7 +15,6 @@ class User(Model, SqlAlchemyBase, UserMixin):
     password = Column(String, nullable=False)
     surname = Column(String, nullable=True)
     name = Column(String, nullable=True)
-    avatar_image = Column(String, nullable=True)
     countries = orm.relation(
         'Country', secondary='users_to_countries', backref='users',
         cascade='all, delete-orphan', single_parent=True, lazy='subquery')

@@ -36,14 +36,15 @@
             <div class="container">
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                     <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                        <img src="{{ url_for('static', filename='img/favicon.ico') }}" class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                        <img src="{{ url_for('static', filename='img/favicon.ico') }}" class="bi me-2" width="40" height="32" role="img"
+                             aria-label="Bootstrap">
                     </a>
 
                     <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                         <li><a href="/" class="nav-link px-2 text-white">Главная</a></li>
 
                         {% if current_user.is_authenticated %}
-                            <li><a href="/profile/{{ current_user.nickname }}" class="nav-link px-2 text-white">Профиль</a></li>
+                            <li><a href="/profile/{{ current_user.id }}" class="nav-link px-2 text-white">Профиль</a></li>
                         {% else %}
                             <li><a class="nav-link disabled px-2" aria-disabled="true">Профиль</a></li>
                         {% endif %}
@@ -53,21 +54,27 @@
                     </ul>
 
                     <form action="" method="post" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 search-line">
+                        {{ search_form.hidden_tag() }}
                         {{ search_form.text(type="search", class="form-control form-control-dark", placeholder="Поиск...") }}
                     </form>
 
-                    <div class="text-end">
-                        {% if current_user.is_authenticated %}
-<!--                            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">-->
-<!--                                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">-->
-<!--                            </a>-->
+                    {% if current_user.is_authenticated %}
+                        <a href="#" class="nav-link px-2 text-white">
+                            <span>
+                                {{ current_user.nickname}}
+                            </span>
 
-                        {% else %}
-                            <a href="/login" class="btn btn-light me-2">Логин</a>
-                            <a href="/register" class="btn btn-warning">Регистрация</a>
+                            {% set avatar = url_for('static', filename='upload/profiles/' + current_user.id|string + '/avatar.png') %}
+                            {% if avatar[1:] is not file_exists %}
+                                {% set avatar = url_for('static', filename='img/default_avatar.jpg') %}
+                            {% endif %}
 
-                        {% endif %}
-                    </div>
+                            <img src="{{ avatar }}" alt="mdo" width="32" height="32" class="rounded-circle">
+                        </a>
+                    {% else %}
+                        <a href="/login" class="btn btn-light me-2">Логин</a>
+                        <a href="/register" class="btn btn-warning">Регистрация</a>
+                    {% endif %}
                 </div>
             </div>
         </header>

@@ -28,8 +28,8 @@ class Unique(Validator):
         # таблицы self.model, где значение field равно значению из
         # колонки field.__name__ и если таких значений нет,
         # значит валидация прошла успешно
-        if len(session.query(self.model).filter(self.model().__getattribute__(
-                column_name) == field.data).all()) == 0:
+        if len(session.query(self.model).filter(
+                getattr(self.model, column_name) == field.data).all()) == 0:
             return
 
         message = f'Поле {column_name} уже существует' \
