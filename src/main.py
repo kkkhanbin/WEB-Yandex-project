@@ -1,7 +1,6 @@
-import sys
-sys.path.append('/home/usr/WEB-Yandex-project')
-
 import os
+import sys
+sys.path.append(os.path.abspath('..'))
 
 from waitress import serve
 

@@ -6,7 +6,8 @@ from src.data.models.model import Model
 users_to_countries = Table(
     'users_to_countries', SqlAlchemyBase.metadata,
     Column('users', Integer, ForeignKey('users.id')),
-    Column('countries', Integer, ForeignKey('countries.id')), extend_existing=True
+    Column('countries', Integer, ForeignKey('countries.id')),
+    extend_existing=True
 )
 
 

@@ -8,7 +8,8 @@ from .favicon.favicon import favicon
 from .register.register import register
 from .logout.logout import logout
 from .login.login import login
+from .profile import profile
 
 __all__ = (
-    'routes_bp', 'index', 'favicon', 'register', 'logout', 'login'
+    'routes_bp', 'index', 'favicon', 'register', 'logout', 'login', 'profile'
 )

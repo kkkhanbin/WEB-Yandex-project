@@ -5,8 +5,7 @@ from flask_login import current_user, login_user
 
 from src.routes import routes_bp
 from src.forms import SearchForm, LoginForm
-from src.data import find_fields
-from src.data.models import User
+from src.data import find_user
 
 
 @routes_bp.route('/login', methods=['GET', 'POST'])
@@ -21,16 +20,10 @@ def login():
     if form.validate_on_submit():
         # Модель, у которой есть совпадения по одной из колонок
         # ['id', 'nickname', 'email'] и написанным пользователем логином
-        login_model = find_fields(
-            User, ['id', 'nickname', 'email'], form.login.data)
+        login_model = find_user(form.login.data)
 
         # Если найдены совпадения
         if login_model is not None:
-            # Так как функция find_fields возвращает список, мы берем первое
-            # значение потому что проверка шла на уникальные поля и
-            # несколько совпадений быть не может
-            login_model = login_model[0]
-
             # Если пароль верный
             if login_model.check_password(form.password.data):
                 # Успешный логин пользователя
