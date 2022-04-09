@@ -34,3 +34,20 @@ class Model(SerializerMixin):
 
         # Все прошло успешно, возвращем себя
         return self
+
+    @staticmethod
+    def find_fields(session, model, columns: list, value) -> list or None:
+        """
+        Поиск полей в таблице по нескольким колонкам
+
+        :param model: модель, в таблице которой, нужно искать
+        :param columns: названия колонок, по которым нужно искать.
+        Их порядок важен, так как функция возвращает первые попавшиеся значения
+        :param value: искомое значение
+        :return: список моделей, в случае нахождения или None
+        """
+        for column in columns:
+            fields = session.query(model).filter(
+                getattr(model, column) == value).all()
+            if len(fields) > 0:
+                return fields

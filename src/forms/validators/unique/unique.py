@@ -5,10 +5,14 @@ from src.data import session
 
 
 class Unique(Validator):
-    def __init__(self, model, message=None):
+    def __init__(self, model, message=None, except_values:list=None):
+        if except_values is None:
+            except_values = []
+
+        self.except_values = except_values
         self.model = model
         self.message = message
-        self.field_flags = {"required": True}
+        self.field_flags = {'required': True}
 
     def __call__(self, form, field):
         """
@@ -24,12 +28,23 @@ class Unique(Validator):
         # Название колонки
         column_name = field.name
 
-        # здесь мы ищем значение из
-        # таблицы self.model, где значение field равно значению из
-        # колонки field.__name__ и если таких значений нет,
-        # значит валидация прошла успешно
-        if len(session.query(self.model).filter(
-                getattr(self.model, column_name) == field.data).all()) == 0:
+        # Здесь мы ищем значение совпадения в колонке column_name, где
+        # значения колонки равны переданному значению field.data
+        matches = session.query(self.model).filter(
+            getattr(self.model, column_name) == field.data).all()
+
+        # Проверка на то, есть ли все совпадения в except-списке. Если хотя-бы
+        # одно совпадение не в списке, то passed станет False
+        passed = True
+        for match in matches:
+            if getattr(match, column_name) not in self.except_values:
+                passed = False
+                break
+
+        # Если все совпадения в except-списке. Если совпадений не было найдено,
+        # то passed тоже будет True, поэтому нет смысла делать доп. проверку на
+        # отсутствие совпадений
+        if passed:
             return
 
         message = f'Поле {column_name} уже существует' \

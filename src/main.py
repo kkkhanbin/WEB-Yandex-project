@@ -9,6 +9,7 @@ from src import app
 
 def main():
     port = int(os.getenv('PORT'))
+    app.run()
     serve(app, host='127.0.0.1', port=port)
 
 

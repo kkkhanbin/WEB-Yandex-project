@@ -1,18 +1,11 @@
 {% extends "base.html" %}
 
-{% block head %}
-
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/register/register.css') }}">
-
-{% endblock %}
-
 {% block content %}
-<h1 class="title">
-    Регистрация пользователя
-</h1>
+
+<h1>Редактирование профиля пользователя {{ user.nickname }}</h1>
 
 <form action="" method="post" class="form-float" enctype="multipart/form-data">
-    {{ form.csrf_token() }}
+    {{ form.hidden_tag() }}
 
     <div class="errors">
         {% for key in form.errors %}
@@ -75,13 +68,6 @@
         {{ form.countries.label(class='col-sm-2 col-form-label') }}
         <div class="col-sm-10">
             {{ form.countries(class='form-control') }}
-        </div>
-    </div>
-
-    <div class="mb-3 row register-item">
-        {{ form.login.label(class='col-sm-2 col-form-label') }}
-        <div class="col-sm-10 form-check form-switch">
-            {{ form.login(role='switch', class='form-check-input', type="checkbox") }}
         </div>
     </div>
 

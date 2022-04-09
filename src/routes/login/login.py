@@ -5,7 +5,8 @@ from flask_login import current_user, login_user
 
 from src.routes import routes_bp
 from src.forms import SearchForm, LoginForm
-from src.data import find_user
+from src.data.models import User
+from src.data import session
 
 
 @routes_bp.route('/login', methods=['GET', 'POST'])
@@ -20,7 +21,7 @@ def login():
     if form.validate_on_submit():
         # Модель, у которой есть совпадения по одной из колонок
         # ['id', 'nickname', 'email'] и написанным пользователем логином
-        login_model = find_user(form.login.data)
+        login_model = User.find(session, form.login.data)
 
         # Если найдены совпадения
         if login_model is not None:

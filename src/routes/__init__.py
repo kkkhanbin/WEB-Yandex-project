@@ -9,7 +9,9 @@ from .register.register import register
 from .logout.logout import logout
 from .login.login import login
 from .profile import profile
+from .profile.edit.edit import edit as profile_edit
 
 __all__ = (
-    'routes_bp', 'index', 'favicon', 'register', 'logout', 'login', 'profile'
+    'routes_bp', 'index', 'favicon', 'register', 'logout', 'login', 'profile',
+    'profile_edit'
 )

@@ -28,8 +28,10 @@
     </div>
 </div>
 
-<div class="d-grid gap-2">
-    <a href="/profile/{{ user.id }}/edit" class="btn btn-warning">Редактировать</a>
-</div>
+{% if current_user.is_authenticated and current_user.id == user.id %}
+    <div class="d-grid gap-2">
+        <a href="/profile/{{ user.id }}/edit" class="btn btn-warning">Редактировать</a>
+    </div>
+{% endif %}
 
 {% endblock %}
