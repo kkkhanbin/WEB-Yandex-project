@@ -16,7 +16,7 @@ class AddEditProfileForm(Form):
 
     avatar_image = FileField(
         'Фото профиля',
-        validators=[FileAllowed(['jpg', 'png', 'svg'],
+        validators=[FileAllowed(['jpg', 'png', 'svg', 'jpeg', 'bmp'],
                                 'Разрешены только картинки')])
     nickname = StringField('Ник', validators=[
         DataRequired(), Unique(User, 'Такой никнейм уже существует')])
