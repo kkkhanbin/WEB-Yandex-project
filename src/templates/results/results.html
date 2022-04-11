@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/results/results.css') }}">
+
+{% endblock %}
+
+{% block content %}
+
+<h1>Результаты поиска <strong>{{ results.request_text }}</strong></h1>
+
+<div class="errors">
+    {% for key in search_form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{form.errors[key]|join(' | ')}}
+        </div>
+    {% endfor %}
+
+    {% for key in results.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{results.errors[key]|join(' | ')}}
+        </div>
+    {% endfor %}
+</div>
+
+<div>
+    {% if results|length == 0 %}
+        <p>Ничего не найдено</p>
+    {% else %}
+        <p>Найдено {{ results|length }} результатов</p>
+    {% endif %}
+
+    {% for result in results %}
+        {{ result.html|safe }}
+
+    {% endfor %}
+</div>
+
+<a class="btn btn-outline-secondary" href="/">Вернуться на главную</a>
+
+{% endblock %}

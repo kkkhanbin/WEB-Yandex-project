@@ -1,0 +1,18 @@
+.search-result-in {
+    margin: 1%;
+}
+
+.result-link {
+    text-decoration: none;
+    color: black;
+}
+
+.profile-link:hover {
+    background: #DDDDDD;
+    transition-delay: 0.3s;
+}
+
+.search-result-out {
+    margin-top: 1%;
+    margin-bottom: 1%;
+}

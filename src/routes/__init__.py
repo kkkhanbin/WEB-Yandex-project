@@ -10,8 +10,9 @@ from .logout.logout import logout
 from .login.login import login
 from .profile import profile
 from .profile.edit.edit import edit as profile_edit
+from .results.results import results
 
 __all__ = (
     'routes_bp', 'index', 'favicon', 'register', 'logout', 'login', 'profile',
-    'profile_edit'
+    'profile_edit', 'results'
 )

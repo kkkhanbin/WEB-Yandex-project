@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% block head %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/profile/edit/edit.css') }}">
+
+{% endblock %}
+
 {% block content %}
 
 <h1>Редактирование профиля пользователя {{ user.nickname }}</h1>
@@ -73,5 +79,7 @@
 
     {{ form.submit(type="submit", class="form-control register-item btn btn-primary") }}
 </form>
+
+<a href="/profile/{{ user.id }}" class="link form-control register-item btn btn-secondary">Назад</a>
 
 {% endblock %}

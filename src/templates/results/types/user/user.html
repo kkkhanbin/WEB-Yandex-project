@@ -1,0 +1,24 @@
+{% extends "results/types/type.html" %}
+
+{% block content %}
+
+{% set user = content['model'] %}
+
+<a href="/profile/{{ user.id }}" class="result-link">
+    <div class="search-result-in row g-0">
+        <div class="col-sm-8 col-md-2">
+            {% set avatar = url_for('static', filename='upload/profiles/' + user.id|string + '/avatar.png') %}
+            {% if avatar[1:] is not file_exists %}
+                {% set avatar = url_for('static', filename='img/default_avatar.jpg') %}
+            {% endif %}
+            <img src="{{ avatar }}" alt="" width="128" height="128" class="rounded-circle border">
+        </div>
+
+        <div class="col-sm-2 col-md-6">
+            <h2><strong>{{ user.name }} {{ user.surname }}</strong></h2>
+            <p><strong>{{ user.nickname }}</strong></p>
+        </div>
+    </div>
+</a>
+
+{% endblock %}
