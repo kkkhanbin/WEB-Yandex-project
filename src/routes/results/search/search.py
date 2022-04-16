@@ -1,6 +1,6 @@
 from src.data import session
-from src.data.models import User, Country
-from .result_types import USER_RESULT_TYPE, COUNTRY_RESULT_TYPE
+from src.data.models import User
+from .result_types import USER_RESULT_TYPE
 from .results import Result, Results
 
 
@@ -28,7 +28,7 @@ class Search:
         # сигнатурой:
         # :param text: поисковый запрос. Тип - str
         # :return: список результатов. Тип - Results
-        search_functions = [cls.search_users, cls.search_countries]
+        search_functions = [cls.search_users]
         for search_func in search_functions:
             # Проверяем каждое слово в поисковом запросе
             for word in text.split():
@@ -55,14 +55,6 @@ class Search:
             User.surname.like(f'%{text}%')).distinct().all()
 
         return cls.pack_models_in_results(text, users, USER_RESULT_TYPE)
-
-    @classmethod
-    def search_countries(cls, text: str) -> Results:
-        # Поиск стран по названию
-        countries = session.query(Country).filter(
-            Country.name.like(f'%{text}%')).distinct().all()
-
-        return cls.pack_models_in_results(text, countries, COUNTRY_RESULT_TYPE)
 
     @classmethod
     def pack_models_in_results(

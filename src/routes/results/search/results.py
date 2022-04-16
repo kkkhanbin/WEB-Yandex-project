@@ -2,13 +2,12 @@ from collections import defaultdict
 
 from flask import render_template
 
-from .result_types import USER_RESULT_TYPE, COUNTRY_RESULT_TYPE
+from .result_types import USER_RESULT_TYPE
 
 TYPES_PATH = 'results/types/'
 # html шаблоны для разных типов результатов поиска
 HTML_TEMPLATES = {
-    USER_RESULT_TYPE: TYPES_PATH + 'user/user.html',
-    COUNTRY_RESULT_TYPE: TYPES_PATH + 'country/country.html'
+    USER_RESULT_TYPE: TYPES_PATH + 'user/user.html'
 }
 
 

@@ -1,10 +1,9 @@
 from flask_wtf.file import FileAllowed
-from wtforms import StringField, SubmitField, EmailField, SelectMultipleField,\
-    BooleanField, PasswordField, FileField
+from wtforms import StringField, SubmitField, EmailField, BooleanField, \
+    PasswordField, FileField
 from wtforms.validators import DataRequired, Length, EqualTo
 
-from src.data.models import Country, User
-from src.data import session
+from src.data.models import User
 from src.forms.validators import Unique
 from src.forms.form import Form
 
@@ -12,17 +11,15 @@ MIN_PASSWORD_LENGTH = 10
 
 
 class AddEditProfileForm(Form):
-    COUNTRIES = [country.name for country in session.query(Country).all()]
-
     avatar_image = FileField(
         'Фото профиля',
         validators=[FileAllowed(['jpg', 'png', 'svg', 'jpeg', 'bmp'],
                                 'Разрешены только картинки')])
     nickname = StringField('Ник', validators=[
-        DataRequired(), Unique(User, 'Такой никнейм уже существует')])
+        DataRequired(), Unique(User, message='Такой никнейм уже существует')])
     email = EmailField(
         'Почта', validators=[
-            DataRequired(), Unique(User, 'Такой емейл уже существует')])
+            DataRequired(), Unique(User, message='Такой емейл уже существует')])
     password = PasswordField('Пароль', validators=[
         DataRequired('Нужно ввести пароль'),
         Length(MIN_PASSWORD_LENGTH, message=
@@ -39,6 +36,5 @@ class AddEditProfileForm(Form):
     name = StringField(
         'Имя', validators=[
             Length(0, 50, 'Имя не должно превышать длину в 50 символов')])
-    countries = SelectMultipleField('Посещенные страны', choices=COUNTRIES)
     login = BooleanField('Войти', default=True)
     submit = SubmitField('Сохранить')

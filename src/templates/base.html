@@ -75,8 +75,18 @@
 
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li>
+                                    <a class="dropdown-item" href="/profile/{{ current_user.id }}">
+                                        Профиль
+                                    </a>
+                                </li>
+                                <li>
                                     <a class="dropdown-item" href="/profile/{{ current_user.id }}/edit">
                                         Управление аккаунтом
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/profile/{{ current_user.id }}/develop">
+                                        Для разработчиков
                                     </a>
                                 </li>
                                 <li>

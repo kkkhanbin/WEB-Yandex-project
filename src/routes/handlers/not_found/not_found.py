@@ -6,7 +6,7 @@ from src.forms import SearchForm
 
 
 @handlers_bp.app_errorhandler(NotFound)
-def not_found(exception):
+def not_found(error):
     form = SearchForm()
     return render_template(
-        'handlers/not_found/not_found.html', search_form=form)
+        'handlers/not_found/not_found.html', search_form=form, error=error)

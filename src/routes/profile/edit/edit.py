@@ -1,6 +1,6 @@
-from flask_login import current_user
 from flask import render_template, redirect
 
+from ..profile import check_user_access
 from src.routes import routes_bp
 from src.data import session
 from src.data.models import User
@@ -9,15 +9,9 @@ from src.forms import SearchForm, AddEditProfileForm
 
 @routes_bp.route('/profile/<login>/edit', methods=['GET', 'POST'])
 def edit(login):
-    # Первым делом нужно проверить авторизован ли пользователь под аккаунтом,
-    # который сейчас будет редактироваться
-    if not current_user.is_authenticated:
-        # Если пользователь не авторизован, пересылаем его на регистрацию
-        return redirect('/register')
-    if not current_user.check_login(login):
-        # Если пользователь не является владельцем профиля, пересылаем его на
-        # просмотр профиля этого человека
-        return redirect(f'/profile/{login}')
+    response = check_user_access(login)
+    if response is not True:
+        return response
 
     user = User.find(session, login)
     form = AddEditProfileForm()

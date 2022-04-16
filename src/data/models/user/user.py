@@ -2,10 +2,14 @@ import os
 
 from PIL import Image
 
+from flask import abort
 from flask_wtf import FlaskForm
-from sqlalchemy import Column, Integer, String, orm
 from flask_login import UserMixin
+
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.exceptions import NotFound
+
+from sqlalchemy import Column, Integer, String
 
 from src.data.db_session import SqlAlchemyBase
 from src.data.models.model import Model
@@ -20,9 +24,6 @@ class User(Model, SqlAlchemyBase, UserMixin):
     password = Column(String, nullable=False)
     surname = Column(String, nullable=True)
     name = Column(String, nullable=True)
-    countries = orm.relation(
-        'Country', secondary='users_to_countries', backref='users',
-        cascade='all, delete-orphan', single_parent=True, lazy='subquery')
 
     def check_password(self, password) -> bool:
         return check_password_hash(self.password, password)
@@ -62,7 +63,7 @@ class User(Model, SqlAlchemyBase, UserMixin):
         super().load_fields(source)
 
     @classmethod
-    def find(cls, session, login):
+    def find(cls, session, login, abort_if_user_not_find: bool=False):
         """
         Поиск пользователя по нескольким колонкам
 
@@ -72,13 +73,29 @@ class User(Model, SqlAlchemyBase, UserMixin):
 
         :param session: БД сессия
         :param login: искомое значение колонки
+        :param abort_if_user_not_find: создавать ошибку 404 при ненахождении
+        пользователя
         :return: User, если пользователь найден, иначе - None
+        :raises
         """
+
+        # Поиск пользователя по колонкам id, nickname, email
         response = cls.find_fields(
             session, User, ['id', 'nickname', 'email'], login)
-        if response is not None:
+
+        # Если мы ничего не нашли
+        if response is None:
+            # Если нужно создавать ошибку 404
+            if abort_if_user_not_find:
+                abort(NotFound.code,
+                      description=f'Пользователь {login} не найден')
+            # Если не нужно (тут можно не ставить else, но так удобнее читать)
+            else:
+                return None
+        # Если что-то нашли (тут тоже можно не ставить else)
+        else:
+            # То просто возвращаем найденного пользователя
             return response[0]
-        return response
 
     @staticmethod
     def create_dir(user) -> None:

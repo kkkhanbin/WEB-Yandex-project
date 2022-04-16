@@ -8,8 +8,14 @@
 
 {% block error %}
 
+{% if error.description != 'The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.' %}
+    {% set description = error.description %}
+{% else %}
+    {% set description = 'Страница не найдена' %}
+{% endif %}
+
 <h3>
-    Страница не найдена
+    {{ description }}
 </h3>
 <p>
     Страница устарела, была удалена или не существовала вовсе

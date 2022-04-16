@@ -15,3 +15,8 @@ p {
     display: inline-block;
     white-space: nowrap
 }
+
+.link {
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+}

@@ -18,7 +18,9 @@ class Model(SerializerMixin):
                 self.__setattr__(key, source[key])
 
         elif isinstance(source, FlaskForm):
+            # Проходим по названиям колонок таблицы
             for column_name in self.__table__.columns.keys():
+                # Получение самой колонки
                 column = type(self).__dict__[column_name]
 
                 # Если автоинкремент выключен
@@ -32,7 +34,7 @@ class Model(SerializerMixin):
         else:
             raise TypeError('Неверный тип source')
 
-        # Все прошло успешно, возвращем себя
+        # Все прошло успешно, возвращаем себя
         return self
 
     @staticmethod

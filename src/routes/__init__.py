@@ -11,8 +11,10 @@ from .login.login import login
 from .profile import profile
 from .profile.edit.edit import edit as profile_edit
 from .results.results import results
+from .about.about import about
+from .profile.delete.delete import delete as profile_delete
 
 __all__ = (
     'routes_bp', 'index', 'favicon', 'register', 'logout', 'login', 'profile',
-    'profile_edit', 'results'
+    'profile_edit', 'results', 'about', 'profile_delete'
 )

@@ -16,6 +16,10 @@ def add_resources(api: Api, *resources) -> None:
         api.add_resource(resource, route)
 
 
+# Ресурсы для API в виде кортежей, где первый элемент - сам ресурс, а второй -
+# его url
+RESOURCES = ()
+
 __all__ = (
-    'add_resources'
+    'add_resources', 'RESOURCES'
 )

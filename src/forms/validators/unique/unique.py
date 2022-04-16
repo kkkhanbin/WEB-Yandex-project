@@ -1,54 +1,75 @@
 from wtforms.validators import StopValidation
 
 from src.forms.validators.validator import Validator
-from src.data import session
+from src.data import session, SqlAlchemyBase
 
 
 class Unique(Validator):
-    def __init__(self, model, message=None, except_values:list=None):
+    """
+    Валидатор, предназначенный для проверки полей в форме или аргументов из
+    парсера на уникальность в определенной таблице
+    """
+
+    # Сообщения ошибок
+    DEFAULT_VALIDATION_ERROR_MESSAGE = 'Поле {column_name} уже существует'
+
+    def __init__(self, model: SqlAlchemyBase, except_values: list=None,
+                 column_name: str=None,
+                 *args, **kwargs):
+        """
+        Инициализация валидатора уникальных значений
+
+        :param model: модель таблицы, в которой будет осуществляться поиск
+        одинаковых значений
+        :param except_values: список значений, которые нужно пропускать при
+        проверке. Например: идет поиск значения в колонке с почтой, в этом
+        списке есть значение "example@gmail.com" и если будет найдена такая
+        почта, валидатор не будет брать ее в расчет
+        :param column_name: название валидируемой колонки, нужно заполнять
+        только если тип валидируемого объекта - argument, так как при типе -
+        field, валидатор сам находит название колонки, но если вы заполните
+        его при типе - field, то оно будет приоритетнее найденного валидатором
+        """
+
         if except_values is None:
             except_values = []
 
+        self.column_name = column_name
         self.except_values = except_values
         self.model = model
-        self.message = message
-        self.field_flags = {'required': True}
 
-    def __call__(self, form, field):
-        """
-        Процесс валидации
+        super().__init__(*args, **kwargs)
 
-        :param form: Форма для валидации, тип - flask_wtf.FlaskForm
-        :param field: Поле для валидации, тип - wtforms.Field
-        :return: None, в случаях, когда валидация прошла успешно
-        :raises: wtforms.validators.StopValidation, в случаях, когда была
-        найдена ошибка при валидации
-        """
+    def __call__(self, *args):
+        super().__call__(*args)
 
-        # Название колонки
-        column_name = field.name
+        # Данные для валидации
+        column_name = self.get_column_name(*args)
+        validation_data = self.get_validation_data(*args)
 
         # Здесь мы ищем значение совпадения в колонке column_name, где
-        # значения колонки равны переданному значению field.data
+        # значения колонки равны переданному значению field.data и их нет в
+        # except-списке
         matches = session.query(self.model).filter(
-            getattr(self.model, column_name) == field.data).all()
+            (getattr(self.model, column_name) == validation_data) &
+            (getattr(self.model, column_name).not_in(
+                self.except_values))).all()
 
-        # Проверка на то, есть ли все совпадения в except-списке. Если хотя-бы
-        # одно совпадение не в списке, то passed станет False
-        passed = True
-        for match in matches:
-            if getattr(match, column_name) not in self.except_values:
-                passed = False
-                break
-
-        # Если все совпадения в except-списке. Если совпадений не было найдено,
-        # то passed тоже будет True, поэтому нет смысла делать доп. проверку на
-        # отсутствие совпадений
-        if passed:
+        # Если нет совпадений, то валидация прошла успешно
+        if len(matches) == 0:
             return
 
-        message = f'Поле {column_name} уже существует' \
-            if self.message is None else self.message
-
-        field.errors[:] = []
+        message = self.DEFAULT_VALIDATION_ERROR_MESSAGE.format(
+            column_name=column_name) if self.message is None else self.message
         raise StopValidation(message)
+
+    def get_column_name(self, *args):
+        if self.column_name is not None:
+            column_name = self.column_name
+        else:
+            if self.type == self.VALIDATION_FIELD_TYPE:
+                column_name = args[1].name
+            else:
+                raise ValueError(self.COLUMN_NAME_ERROR_MESSAGE)
+
+        return column_name
