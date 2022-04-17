@@ -23,17 +23,20 @@
 
         <div class="col-sm-2 col-md-6">
             <h2><strong>{{ user.name }} {{ user.surname }}</strong></h2>
-            <p><strong>{{ user.nickname }}</strong></p>
+            <p>
+                <strong>{{ user.nickname }}</strong><br>
+                ID - <strong>{{ user.id }}</strong>
+            </p>
         </div>
     </div>
 </div>
 
 {% if current_user.is_authenticated and current_user.id == user.id %}
-    <div class="d-grid gap-2">
-        <a href="/profile/{{ user.id }}/edit" class="btn btn-warning">Редактировать</a>
+    <div class="d-grid gap-2 margin-vertical">
+        <a href="/profile/{{ user.nickname }}/edit" class="btn btn-warning">Редактировать</a>
     </div>
-    <div class="d-grid gap-2 link">
-        <a href="/profile/{{ user.id }}/delete" class="btn btn-danger">Удалить</a>
+    <div class="d-grid gap-2 margin-vertical">
+        <a href="/profile/{{ user.nickname }}/delete" class="btn btn-danger">Удалить</a>
     </div>
 {% endif %}
 

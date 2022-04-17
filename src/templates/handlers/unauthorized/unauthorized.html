@@ -1,0 +1,20 @@
+{% extends "handlers/handler.html" %}
+
+{% block error %}
+
+{% if error.description != "The server could not verify that you are authorized to access the URL requested. You either supplied the wrong credentials (e.g. a bad password), or your browser doesn't understand how to supply the credentials required." %}
+    {% set description = error.description %}
+{% else %}
+    {% set description = 'Вы не авторизованы' %}
+{% endif %}
+
+<h3>
+    {{ description }}
+</h3>
+<p>
+    Для продолжения войдите в учётную запись
+</p>
+
+<a href="/login" class="btn btn-outline-primary">Авторизироваться</a>
+
+{% endblock %}

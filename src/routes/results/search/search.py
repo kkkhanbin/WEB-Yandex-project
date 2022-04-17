@@ -50,9 +50,18 @@ class Search:
     def search_users(cls, text: str) -> Results:
         # Поиск пользователей по никнейму, имени и фамилии
         users = session.query(User).filter(
-            User.nickname.like(f'%{text}%') |
-            User.name.like(f'%{text}%') |
-            User.surname.like(f'%{text}%')).distinct().all()
+            User.nickname.ilike(f'%{text.lower()}%') |
+            User.name.ilike(f'%{text.lower()}%') |
+            User.surname.ilike(f'%{text.lower()}%') |
+
+            User.nickname.ilike(f'%{text.upper()}%') |
+            User.name.ilike(f'%{text.upper()}%') |
+            User.surname.ilike(f'%{text.upper()}%') |
+
+            User.nickname.ilike(f'%{text}%') |
+            User.name.ilike(f'%{text}%') |
+            User.surname.ilike(f'%{text}%')
+        ).distinct().all()
 
         return cls.pack_models_in_results(text, users, USER_RESULT_TYPE)
 

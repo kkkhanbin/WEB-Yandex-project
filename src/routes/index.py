@@ -6,5 +6,5 @@ from src.forms import SearchForm
 
 @routes_bp.route('/')
 def index():
-   return render_template(
+    return render_template(
         'index.html', title='Adventure Time', search_form=SearchForm())

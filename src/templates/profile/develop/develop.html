@@ -1,43 +1,48 @@
 {% extends "base.html" %}
 
-{% block head %}
-
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/profile/edit/edit.css') }}">
-
-{% endblock %}
-
 {% block content %}
 
-<h1>Удаление профиля пользователя {{ user.nickname }}</h1>
+<h1>Кабинет разработчика пользователя {{ user.nickname }}</h1>
 
-<form action="" method="post" class="form-float" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
+<h2 class="text-center">Ваши API-ключи</h2>
 
-    <div class="errors">
-        {% for key in form.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{form.errors[key]|join(' | ')}}
+<div>
+    {% if apikeys|length > 0 %}
+        {% for apikey in apikeys %}
+            {% set apikey_name = apikey.name if apikey.name != None else 'Нет названия' %}
+
+            <div class="border rounded item-outer">
+                <div class="item-inner">
+                    <h3>{{ apikey_name }}</h3>
+                    <p>
+                        {{ apikey.apikey }}<br>
+                        Уровень доступа: {{ apikey.access_level }}
+                        {% if apikey.block %}
+                            <p class="text-danger">Заблокирован</p>
+                        {% else %}
+                            <p class="text-success">Активен</p>
+                        {% endif %}
+                    </p>
+
+                    <hr>
+
+                    <div class="inline-block">
+                        <a href="/profile/{{ user.nickname }}/develop/{{ apikey.id }}/edit" class="btn btn-primary inline-block">Изменить</a>
+                        <a href="/profile/{{ user.nickname }}/develop/{{ apikey.id }}/delete" class="btn btn-danger inline-block">Удалить</a>
+                    </div>
+                </div>
             </div>
+
         {% endfor %}
-    </div>
+    {% else %}
+        <div class="alert alert-warning" role="alert">У вас нет ни одного API-ключа</div>
+    {% endif %}
+</div>
 
-    <div class="mb-3 row register-item">
-        {{ form.confirm_word.label(class='col-sm-2 col-form-label') }}
-        <div class="col-sm-10">
-            {{ form.confirm_word(class='form-control') }}
-        </div>
-    </div>
-
-    <div class="mb-3 row register-item">
-        {{ form.confirm.label(class='col-sm-2 col-form-label') }}
-        <div class="col-sm-10 form-check form-switch">
-            {{ form.confirm(role='switch', class='form-check-input') }}
-        </div>
-    </div>
-
-    {{ form.submit(type="submit", class="form-control register-item btn btn-danger") }}
-</form>
-
-<a href="/profile/{{ user.id }}" class="link form-control register-item btn btn-secondary">Назад</a>
-
+<div class="margin-vertical">
+    <a href="/profile/{{ user.nickname }}/develop/add" class="form-control register-item btn btn-success">Создать новый ключ</a>
+</div>
+<div class="margin-vertical">
+    <a href="/profile/{{ user.nickname }}" class=" form-control register-item btn btn-secondary">Назад</a>
+</div>
 {% endblock %}

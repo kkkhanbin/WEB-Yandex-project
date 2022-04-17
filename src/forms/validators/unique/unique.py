@@ -13,8 +13,8 @@ class Unique(Validator):
     # Сообщения ошибок
     DEFAULT_VALIDATION_ERROR_MESSAGE = 'Поле {column_name} уже существует'
 
-    def __init__(self, model: SqlAlchemyBase, except_values: list=None,
-                 column_name: str=None,
+    def __init__(self, model: SqlAlchemyBase, except_values: list = None,
+                 column_name: str = None,
                  *args, **kwargs):
         """
         Инициализация валидатора уникальных значений

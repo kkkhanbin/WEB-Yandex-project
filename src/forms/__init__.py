@@ -5,8 +5,9 @@ from werkzeug.utils import secure_filename
 
 from .search.search import SearchForm
 from .login.login import LoginForm
-from .profile.add_edit_profile.add_edit_profile import AddEditProfileForm
+from .profile.edit.edit import EditProfileForm
 from .profile.delete.delete import DeleteProfileForm
+from .register.register import RegisterForm
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'svg'}
 UPLOAD_DIR_PATH = ['upload']
@@ -55,7 +56,7 @@ def save_image(field: Field, path: list or str) -> bool:
 
 
 __all__ = (
-    'SearchForm', 'LoginForm', 'AddEditProfileForm', 'save_image',
+    'SearchForm', 'LoginForm', 'EditProfileForm', 'save_image',
     'allowed_file', 'ALLOWED_EXTENSIONS', 'UPLOAD_DIR_PATH',
-    'AVATAR_IMAGE_PATH', 'DeleteProfileForm'
+    'AVATAR_IMAGE_PATH', 'DeleteProfileForm', 'RegisterForm'
 )

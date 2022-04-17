@@ -1,7 +1,7 @@
 from flask import redirect, render_template
 from flask_login import current_user, login_user
 
-from src.forms import AddEditProfileForm, SearchForm
+from src.forms import RegisterForm, SearchForm
 from src.routes import routes_bp
 from src.data.models import User
 from src.data import session
@@ -14,7 +14,7 @@ def register():
     if current_user.is_authenticated:
         return redirect('/profile')
 
-    form = AddEditProfileForm()
+    form = RegisterForm()
 
     # Процесс добавления пользователя
     if form.validate_on_submit():

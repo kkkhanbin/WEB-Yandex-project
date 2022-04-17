@@ -31,48 +31,34 @@
     <div class="mb-3 row register-item">
         {{ form.surname.label(class='col-sm-2 col-form-label') }}
         <div class="col-sm-10">
-            {{ form.surname(class='form-control', type='text') }}
+            {{ form.surname(class='form-control', type='text', value=user.surname) }}
         </div>
     </div>
 
     <div class="mb-3 row register-item">
         {{ form.name.label(class='col-sm-2 col-form-label') }}
         <div class="col-sm-10">
-            {{ form.name(class='form-control', type='text') }}
+            {{ form.name(class='form-control', type='text', value=user.name) }}
         </div>
     </div>
 
     <div class="mb-3 row register-item">
         {{ form.nickname.label(class='col-sm-2 col-form-label') }}
         <div class="col-sm-10">
-            {{ form.nickname(class='form-control', type='text') }}
+            {{ form.nickname(class='form-control', type='text', value=user.nickname) }}
         </div>
     </div>
 
     <div class="mb-3 row register-item">
         {{ form.email.label(class='col-sm-2 col-form-label') }}
         <div class="col-sm-10">
-            {{ form.email(class='form-control') }}
-        </div>
-    </div>
-
-    <div class="mb-3 row register-item">
-        {{ form.password.label(class='col-sm-2 col-form-label') }}
-        <div class="col-sm-10">
-            {{ form.password(class='form-control', type='password') }}
-        </div>
-    </div>
-
-    <div class="mb-3 row register-item">
-        {{ form.repeat_password.label(class='col-sm-2 col-form-label') }}
-        <div class="col-sm-10">
-            {{ form.repeat_password(class='form-control', type='password') }}
+            {{ form.email(class='form-control', value=user.email) }}
         </div>
     </div>
 
     {{ form.submit(type="submit", class="form-control register-item btn btn-primary") }}
 </form>
 
-<a href="/profile/{{ user.id }}" class="link form-control register-item btn btn-secondary">Назад</a>
+<a href="/profile/{{ user.nickname }}" class="margin-vertical form-control register-item btn btn-secondary">Назад</a>
 
 {% endblock %}

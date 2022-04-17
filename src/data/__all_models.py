@@ -1,5 +1,5 @@
-from .models import User
+from .models import User, Apikey
 
 __all__ = (
-    'User'
+    'User', 'Apikey'
 )

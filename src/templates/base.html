@@ -44,7 +44,7 @@
                         <li><a href="/" class="nav-link px-2 text-white">Главная</a></li>
 
                         {% if current_user.is_authenticated %}
-                            <li><a href="/profile/{{ current_user.id }}" class="nav-link px-2 text-white">Профиль</a></li>
+                            <li><a href="/profile/{{ current_user.nickname }}" class="nav-link px-2 text-white">Профиль</a></li>
                         {% else %}
                             <li><a class="nav-link disabled px-2" aria-disabled="true">Профиль</a></li>
                         {% endif %}
@@ -75,17 +75,17 @@
 
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li>
-                                    <a class="dropdown-item" href="/profile/{{ current_user.id }}">
+                                    <a class="dropdown-item" href="/profile/{{ current_user.nickname }}">
                                         Профиль
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="/profile/{{ current_user.id }}/edit">
+                                    <a class="dropdown-item" href="/profile/{{ current_user.nickname }}/edit">
                                         Управление аккаунтом
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="/profile/{{ current_user.id }}/develop">
+                                    <a class="dropdown-item" href="/profile/{{ current_user.nickname }}/develop">
                                         Для разработчиков
                                     </a>
                                 </li>

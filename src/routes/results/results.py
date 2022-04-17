@@ -6,7 +6,7 @@ from src.routes import routes_bp
 from src.routes.results.search import Search
 
 
-def get_request_text(form: FlaskForm=None) -> str or None:
+def get_request_text(form: FlaskForm = None) -> str or None:
     """
     Получение текста запроса
 
