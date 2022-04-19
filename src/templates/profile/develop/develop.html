@@ -7,42 +7,46 @@
 <h2 class="text-center">Ваши API-ключи</h2>
 
 <div>
-    {% if apikeys|length > 0 %}
-        {% for apikey in apikeys %}
-            {% set apikey_name = apikey.name if apikey.name != None else 'Нет названия' %}
+    {% if forbidden is false %}
+        {% if apikeys|length > 0 %}
+            {% for apikey in apikeys %}
+                {% set apikey_name = apikey.name if apikey.name != None and apikey.name != '' else 'Нет названия' %}
 
-            <div class="border rounded item-outer">
-                <div class="item-inner">
-                    <h3>{{ apikey_name }}</h3>
-                    <p>
-                        {{ apikey.apikey }}<br>
-                        Уровень доступа: {{ apikey.access_level }}
-                        {% if apikey.block %}
-                            <p class="text-danger">Заблокирован</p>
-                        {% else %}
-                            <p class="text-success">Активен</p>
-                        {% endif %}
-                    </p>
+                <div class="border rounded item-outer">
+                    <div class="item-inner">
+                        <h3>{{ apikey_name }}</h3>
+                        <p>
+                            {{ apikey.apikey }}<br>
+                            Уровень доступа: {{ apikey.access_level }}
+                            {% if apikey.block %}
+                                <p class="text-danger">Заблокирован</p>
+                            {% else %}
+                                <p class="text-success">Активен</p>
+                            {% endif %}
+                        </p>
 
-                    <hr>
+                        <hr>
 
-                    <div class="inline-block">
-                        <a href="/profile/{{ user.nickname }}/develop/{{ apikey.id }}/edit" class="btn btn-primary inline-block">Изменить</a>
-                        <a href="/profile/{{ user.nickname }}/develop/{{ apikey.id }}/delete" class="btn btn-danger inline-block">Удалить</a>
+                        <div class="inline-block">
+                            <a href="/profile/{{ user.nickname }}/develop/{{ apikey.id }}/edit" class="btn btn-primary inline-block">Изменить</a>
+                            <a href="/profile/{{ user.nickname }}/develop/{{ apikey.id }}/delete" class="btn btn-danger inline-block">Удалить</a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning" role="alert">У вас нет ни одного API-ключа</div>
+        {% endif %}
     {% else %}
-        <div class="alert alert-warning" role="alert">У вас нет ни одного API-ключа</div>
+        <h3>Вы не можете смотреть API-ключи пользователя {{ user.nickname }}</h3>
     {% endif %}
 </div>
 
 <div class="margin-vertical">
-    <a href="/profile/{{ user.nickname }}/develop/add" class="form-control register-item btn btn-success">Создать новый ключ</a>
+    <a href="/profile/{{ current_user.nickname }}/develop/add" class="form-control register-item btn btn-success">Создать новый ключ</a>
 </div>
 <div class="margin-vertical">
-    <a href="/profile/{{ user.nickname }}" class=" form-control register-item btn btn-secondary">Назад</a>
+    <a href="/profile/{{ current_user.nickname }}" class=" form-control register-item btn btn-secondary">Назад</a>
 </div>
 {% endblock %}

@@ -2,7 +2,7 @@
 
 {% block error %}
 
-{% if error.description != 'You don't have the permission to access the requested resource. It is either read-protected or not readable by the server.' %}
+{% if error.description != "You don't have the permission to access the requested resource. It is either read-protected or not readable by the server." %}
     {% set description = error.description %}
 {% else %}
     {% set description = 'У вас нет доступа к этой странице' %}

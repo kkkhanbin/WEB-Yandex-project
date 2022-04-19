@@ -11,6 +11,7 @@ from werkzeug.exceptions import NotFound, Unauthorized, Forbidden
 
 from sqlalchemy import Column, Integer, String
 
+from src.config.constants import AVATAR_PATH
 from src.data.db_session import SqlAlchemyBase
 from src.data.models.model import Model
 
@@ -30,6 +31,15 @@ class User(Model, SqlAlchemyBase, UserMixin):
     FORBIDDEN_DESCRIPTION = 'У вас нет доступа к этому пользователю'
 
     DEFAULT_VALIDATE_EXCEPTIONS = [NotFound, Forbidden, Unauthorized]
+
+    ACCESS_LEVELS_TO_APIKEY = {
+        0: [0],
+        1: [0, 1]
+    }
+
+    @property
+    def apikey_access_levels(self) -> list:
+        return self.ACCESS_LEVELS_TO_APIKEY[self.access_level]
 
     def check_password(self, password) -> bool:
         return check_password_hash(self.password, password)
@@ -62,7 +72,7 @@ class User(Model, SqlAlchemyBase, UserMixin):
         if data:
             self.create_dir(self)
             self.save_image(data, os.path.join(
-                'static', 'upload', 'profiles', str(self.id), 'avatar.png'))
+                *AVATAR_PATH).format(profile_id=self.id))
 
     def load_fields(self, source: FlaskForm or dict, hash_password=True):
         # Хеширование пароля

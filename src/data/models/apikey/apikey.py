@@ -37,21 +37,33 @@ class Apikey(Model, SqlAlchemyBase):
 
         return apikey == self.apikey
 
-    def create_apikey(self):
+    def create_apikey(self) -> str:
         """
         Функция для создания API-ключей
 
         :return: уникальный идентификатор ключа
         """
 
-        return uuid.uuid4()
+        return str(uuid.uuid4())
 
-    def load_fields(self, source: FlaskForm or dict):
+    def load_fields(
+            self, source: FlaskForm or dict, owner=None, load_apikey=True,
+            load_owner=True):
+        if owner is None:
+            owner = current_user
+
         if isinstance(source, FlaskForm):
-            source.apikey = Column(String)
-            source.apikey.data = self.create_apikey()
+            if load_apikey:
+                source.apikey = Column(String)
+                source.apikey.data = self.create_apikey()
+            if load_owner:
+                source.owner = Column(Integer)
+                source.owner.data = owner.id
         elif isinstance(source, dict):
-            source['apikey'] = self.create_apikey()
+            if load_apikey:
+                source['apikey'] = self.create_apikey()
+            if load_owner:
+                source['owner'] = owner.id
 
         super().load_fields(source)
 
@@ -82,8 +94,11 @@ class Apikey(Model, SqlAlchemyBase):
             abort(Unauthorized.code, description=cls.UNAUTHORIZED_DESCRIPTION)
 
         # Если такого API-ключа не существует
-        if NotFound in validators and apikey is None:
+        if NotFound in validators and (apikey is None or apikey == []):
             abort(NotFound.code, description=cls.NOT_FOUND_DESCRIPTION)
+
+        if isinstance(apikey, list):
+            apikey = apikey[0]
 
         # Если создатель API-ключа не пользователь
         if Forbidden in validators and apikey.owner != user.id:

@@ -4,9 +4,9 @@ load_dotenv('.env')
 from flask import Flask
 from flask_restful import Api
 
-from src.data.resources import UserResource
 from src.config import ProductionConfig, register_blueprints, RESOURCES, \
     add_resources, add_tests, TESTS, BLUEPRINTS, login_manager
+from src.data.resources import UserResource
 
 # Создание приложения и его конфигурация
 app = Flask(__name__)
