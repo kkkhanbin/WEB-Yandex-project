@@ -4,12 +4,14 @@ from src.routes import routes_bp
 from src.data import session
 from src.data.models import User
 from src.forms import SearchForm, EditProfileForm
+from src.data.models.validators import ModelNotFound, UserUnauthorized, \
+    UserToUser
 
 
 @routes_bp.route('/profile/<login>/edit', methods=['GET', 'POST'])
 def edit(login):
     user = User.find(session, login)
-    User.validate(user)
+    User.validate(UserUnauthorized(), ModelNotFound(user), UserToUser(user))
 
     form = EditProfileForm()
     # Значения, которые нужно игнорировать при проверке уникальным валидатором

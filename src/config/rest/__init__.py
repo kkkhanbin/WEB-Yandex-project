@@ -1,5 +1,7 @@
 from flask_restful import Api
 
+from src.data.resources import UserResource, UsersListResource
+
 
 def add_resources(api: Api, *resources) -> None:
     """
@@ -18,7 +20,10 @@ def add_resources(api: Api, *resources) -> None:
 
 # Ресурсы для API в виде кортежей, где первый элемент - сам ресурс, а второй -
 # его url
-RESOURCES = ()
+RESOURCES = (
+    (UserResource, '/api/user/<login>'),
+    (UsersListResource, '/api/users')
+)
 
 __all__ = (
     'add_resources', 'RESOURCES'

@@ -1,19 +1,31 @@
-from abc import abstractmethod
+from flask_restful import Resource
 
-from flask_restful import Resource, reqparse
+from src.data.models import Apikey
+from src.data import session
+from src.data.models.validators import ModelNotFound, AccessLevel
+from src.data.resources.parsers import ApikeyParser
 
 
 class RestResource(Resource):
+    APIKEY_PARSER_ID = 'apikey'
+
     def __init__(self):
-        self.parser = reqparse.RequestParser()
+        self.parsers = {}
 
-    @staticmethod
-    @abstractmethod
-    def add_arguments(parser: reqparse.RequestParser) -> None:
-        """
-        Добавление аргументов в парсер реквеста ресурса
+        self.parsers[self.APIKEY_PARSER_ID] = ApikeyParser()
 
-        :param parser: парсер, в который нужно добавить аргументы
-        :return: None
+    def get_apikey(self, access_level: int = 0) -> str:
         """
-        pass
+        Получение API-ключа в реквесте и его валидация
+
+        :return: API-ключ из реквеста
+        """
+
+        req_apikey = self.parsers[self.APIKEY_PARSER_ID].parse_args().apikey
+        apikey = Apikey.find(session, req_apikey)
+        Apikey.validate(
+            ModelNotFound(apikey, 'Такого API-ключа не существует'),
+            AccessLevel(
+                apikey, access_level, 'У вашего API-ключа не хватает доступа'))
+
+        return apikey

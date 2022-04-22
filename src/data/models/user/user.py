@@ -2,12 +2,10 @@ import os
 
 from PIL import Image
 
-from flask import abort
 from flask_wtf import FlaskForm
-from flask_login import UserMixin, current_user
+from flask_login import UserMixin
 
 from werkzeug.security import check_password_hash, generate_password_hash
-from werkzeug.exceptions import NotFound, Unauthorized, Forbidden
 
 from sqlalchemy import Column, Integer, String
 
@@ -19,6 +17,7 @@ from src.data.models.model import Model
 class User(Model, SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
 
+    # Таблица
     id = Column(Integer, primary_key=True, autoincrement=True)
     nickname = Column(String, nullable=False, unique=True)
     email = Column(String, nullable=False, unique=True)
@@ -27,11 +26,7 @@ class User(Model, SqlAlchemyBase, UserMixin):
     name = Column(String, nullable=True)
     access_level = Column(Integer, server_default='0', nullable=False)
 
-    NOT_FOUND_DESCRIPTION = 'Пользователь не найден'
-    FORBIDDEN_DESCRIPTION = 'У вас нет доступа к этому пользователю'
-
-    DEFAULT_VALIDATE_EXCEPTIONS = [NotFound, Forbidden, Unauthorized]
-
+    # Доступные уровни доступа ключей для уровней доступа пользователей
     ACCESS_LEVELS_TO_APIKEY = {
         0: [0],
         1: [0, 1]
@@ -86,31 +81,8 @@ class User(Model, SqlAlchemyBase, UserMixin):
         super().load_fields(source)
 
     @classmethod
-    def find(cls, session, login):
-        """
-        Поиск пользователя по нескольким колонкам
-
-        Является упрощением функции find_fields для поиска пользователя.
-        Благодаря этой функции, можно менять порядок колонок для поиска
-        пользователя
-
-        :param session: БД сессия
-        :param login: искомое значение колонки
-        :return: User, если пользователь найден, иначе - None
-        :raises: werkzeug.exceptions.HTTPException
-        """
-
-        # Поиск пользователя по колонкам id, nickname, email
-        response = cls.find_fields(
-            session, User, id=login, nickname=login, email=login)
-
-        # Если мы ничего не нашли
-        if len(response) == 0:
-            return None
-        # Если что-то нашли (тут тоже можно не ставить else)
-        else:
-            # То просто возвращаем найденного пользователя
-            return response[0]
+    def find(cls, session, key):
+        return super()._find(session, key, 'id', 'nickname', 'email')
 
     @staticmethod
     def create_dir(user) -> None:
@@ -143,40 +115,3 @@ class User(Model, SqlAlchemyBase, UserMixin):
 
         img = Image.open(data)
         img.save(destiny)
-
-    @classmethod
-    def validate(
-            cls, user: SqlAlchemyBase, check_user: SqlAlchemyBase = None,
-            validators: list = None):
-        """
-        Проверка доступа пользователя-check_user к профилю пользователя-user
-
-        :param user: пользователь, к которому будет проверяться доступ
-        :param check_user: проверяемый пользователь (подразумевается что будет
-        использоваться текущий, поэтому он и стоит по умолчанию)
-        :param validators: список валидаторов на проверку, по умолчанию
-        каждый валидатор в списке. В данном случае, валидатор -
-        werkzeug.exceptions.HTTPException.
-        См. Model.DEFAULT_VALIDATE_EXCEPTIONS
-        :raises: werkzeug.exceptions.HTTPException - в случае если доступ к
-        профилю запрещен
-        """
-
-        # Значения по умолчанию
-        if check_user is None:
-            check_user = current_user
-        if validators is None:
-            validators = cls.DEFAULT_VALIDATE_EXCEPTIONS
-
-        # Первым делом нужно проверить авторизован ли пользователь
-        if Unauthorized in validators and not check_user.is_authenticated:
-            abort(Unauthorized.code, description=cls.UNAUTHORIZED_DESCRIPTION)
-
-        # Если такого профиля не существует
-        if NotFound in validators and user is None:
-            abort(NotFound.code, description=cls.NOT_FOUND_DESCRIPTION)
-
-        # Если это не одинаковые профили
-        if Forbidden in validators and \
-                not check_user.check_login(user.nickname):
-            abort(Forbidden.code, description=cls.FORBIDDEN_DESCRIPTION)

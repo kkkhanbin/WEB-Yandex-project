@@ -11,3 +11,12 @@ class BaseConfig:
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
+
+
+class TestingConfig(BaseConfig):
+    DEBUG = True
+
+
+__all__ = (
+    'BaseConfig', 'ProductionConfig', 'TestingConfig'
+)

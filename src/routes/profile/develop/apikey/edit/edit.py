@@ -5,19 +5,23 @@ from src.routes import routes_bp
 from src.data.models import User, Apikey
 from src.data import session
 from src.forms import AddApikeyForm, SearchForm
+from src.data.models.validators import ModelNotFound, UserUnauthorized, \
+    UserToUser, UserToApikey, Blocked
 
 
 @routes_bp.route('/profile/<login>/develop/<int:apikey_id>/edit',
                  methods=['GET', 'POST'])
 def apikey_edit(login, apikey_id):
-    # Нахождение пользователя
-    user, forbidden = User.find(session, login), False
-    User.validate(user)
+    # Пользователь
+    user = User.find(session, login)
+    User.validate(UserUnauthorized(), ModelNotFound(user), UserToUser(user))
 
-    # Нахождение токена
-    apikey = Apikey.find_fields(session, Apikey, id=apikey_id)
-    Apikey.validate(apikey)
-    apikey = apikey[0]
+    # Токен
+    apikey = session.query(Apikey).get(apikey_id)
+    Apikey.validate(
+        ModelNotFound(apikey), UserToApikey(user, apikey),
+        Blocked(
+            apikey, 'Этот API-ключ заблокирован. Его нельзя редактировать'))
 
     # Форма
     form = AddApikeyForm()

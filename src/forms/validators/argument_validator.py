@@ -20,5 +20,5 @@ class ArgumentValidator:
 
     def __call__(self, arg):
         for validator in self.validators:
-            arg = validator(arg)
+            validator(arg)
         return arg

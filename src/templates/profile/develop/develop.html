@@ -4,7 +4,7 @@
 
 <h1>Кабинет разработчика пользователя {{ user.nickname }}</h1>
 
-<h2 class="text-center">Ваши API-ключи</h2>
+<h2 class="text-center">API-ключи</h2>
 
 <div>
     {% if forbidden is false %}
@@ -36,10 +36,10 @@
 
             {% endfor %}
         {% else %}
-            <div class="alert alert-warning" role="alert">У вас нет ни одного API-ключа</div>
+            <div class="alert alert-info" role="alert">У вас нет ни одного API-ключа</div>
         {% endif %}
     {% else %}
-        <h3>Вы не можете смотреть API-ключи пользователя {{ user.nickname }}</h3>
+        <div class="alert alert-info" role="alert">Вы не можете смотреть API-ключи пользователя {{ user.nickname }}</div>
     {% endif %}
 </div>
 

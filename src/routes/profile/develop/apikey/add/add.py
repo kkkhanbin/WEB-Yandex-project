@@ -4,12 +4,14 @@ from src.routes import routes_bp
 from src.data.models import User, Apikey
 from src.data import session
 from src.forms import AddApikeyForm, SearchForm
+from src.data.models.validators import ModelNotFound, UserUnauthorized, \
+    UserToUser
 
 
 @routes_bp.route('/profile/<login>/develop/add', methods=['GET', 'POST'])
 def apikey_add(login):
     user = User.find(session, login)
-    User.validate(user)
+    User.validate(UserUnauthorized(), ModelNotFound(user), UserToUser(user))
 
     form = AddApikeyForm()
     form.access_level.choices = user.apikey_access_levels
