@@ -1,33 +1,14 @@
-from flask import request, render_template, redirect
-from flask_wtf import FlaskForm
+from flask import render_template, redirect
 
-from src.forms import SearchForm
+from src.forms import SearchForm, get_request_field
 from src.routes import routes_bp
 from src.routes.results.search import Search
-
-
-def get_request_text(form: FlaskForm = None) -> str or None:
-    """
-    Получение текста запроса
-
-    Поиск проходит по переданной форме или в аргументах адресной строки
-
-    :param form: форма, обладающая полем text, из которого будет взят текст
-    :return: найденный текст или None
-    """
-    if 'text' in request.args:
-        # Обработка запроса через аргументы адресной строки
-        return request.args['text']
-
-    if form is not None and form.validate_on_submit():
-        # Обработка запроса через форму поиска
-        return form.text.data
 
 
 @routes_bp.route('/results', methods=['GET', 'POST'])
 def results():
     form = SearchForm()
-    request_text = get_request_text(form)
+    request_text = get_request_field(form, 'text')
 
     if form.validate_on_submit():
         # Если пользователь пришел с формы, т.е. с POST запроса, пересылаем его
