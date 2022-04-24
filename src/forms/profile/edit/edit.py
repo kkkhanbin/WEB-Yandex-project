@@ -4,7 +4,7 @@ from wtforms import StringField, SubmitField, EmailField, BooleanField, \
 from wtforms.validators import DataRequired, Length
 
 from src.data.models import User
-from src.forms.validators import Unique
+from src.validators import Unique
 from src.forms.form import Form
 
 MIN_PASSWORD_LENGTH = 10

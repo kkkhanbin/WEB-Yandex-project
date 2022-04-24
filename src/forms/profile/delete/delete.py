@@ -1,7 +1,7 @@
 from wtforms import StringField, SubmitField, BooleanField
 
 from src.forms.form import Form
-from src.forms.validators import EqualToValue
+from src.validators import EqualToValue
 
 
 class DeleteProfileForm(Form):

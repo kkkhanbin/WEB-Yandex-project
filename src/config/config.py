@@ -15,6 +15,7 @@ class ProductionConfig(BaseConfig):
 
 class TestingConfig(BaseConfig):
     DEBUG = True
+    BUNDLE_ERRORS = True
 
 
 __all__ = (

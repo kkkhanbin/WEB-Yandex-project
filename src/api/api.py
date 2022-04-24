@@ -26,10 +26,11 @@ class Api(ABC):
         return requests.get(cls.URL, params=params, headers=headers)
 
     @classmethod
-    def create_url(cls, params: dict = None) -> str:
+    def create_url(cls, url=None, params: dict = None) -> str:
         params = {} if params is None else params
+        url = cls.URL if url is None else url
 
-        return '?'.join([cls.URL, urllib.parse.urlencode(params)])
+        return '?'.join([url, urllib.parse.urlencode(params)])
 
 
 class UseApikey(ABC):

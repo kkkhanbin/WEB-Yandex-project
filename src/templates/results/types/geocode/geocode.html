@@ -1,0 +1,17 @@
+{% extends "results/types/type.html" %}
+
+{% block content %}
+
+{% set feature = content['feature'] %}
+
+<div class="search-result-in row g-0">
+    {% set pos = feature['GeoObject']['Point']['pos'].split() %}
+
+    <a href="/?l=map&z=10&lon={{ pos[0] }}&lat={{ pos[1] }}">
+        <div class="col-sm-2 col-md-6">
+            {{ feature['GeoObject']['metaDataProperty']['GeocoderMetaData']['Address']['formatted'] }}
+        </div>
+    </a>
+</div>
+
+{% endblock %}

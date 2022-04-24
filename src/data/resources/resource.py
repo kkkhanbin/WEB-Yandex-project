@@ -3,7 +3,7 @@ from flask_restful import Resource
 from src.data.models import Apikey
 from src.data import session
 from src.data.models.validators import ModelNotFound, AccessLevel
-from src.data.resources.parsers import ApikeyParser
+from src.parsers import ApikeyParser
 
 
 class RestResource(Resource):

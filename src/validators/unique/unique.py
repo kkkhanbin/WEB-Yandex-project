@@ -1,6 +1,4 @@
-from wtforms.validators import StopValidation
-
-from src.forms.validators.validator import Validator
+from src.validators.validator import Validator
 from src.data import session, SqlAlchemyBase
 
 
@@ -11,7 +9,9 @@ class Unique(Validator):
     """
 
     # Сообщения ошибок
-    DEFAULT_VALIDATION_ERROR_MESSAGE = 'Поле {column_name} уже существует'
+    UNIQUE_ERROR_MESSAGE = 'Поле {column_name} уже существует'
+    COLUMN_NAME_ERROR_MESSAGE = \
+        'Невозможно определить название колонки для валидации'
 
     def __init__(self, model: SqlAlchemyBase, except_values: list = None,
                  column_name: str = None,
@@ -55,13 +55,10 @@ class Unique(Validator):
             (getattr(self.model, column_name).not_in(
                 self.except_values))).all()
 
-        # Если нет совпадений, то валидация прошла успешно
-        if len(matches) == 0:
-            return
-
-        message = self.DEFAULT_VALIDATION_ERROR_MESSAGE.format(
-            column_name=column_name) if self.message is None else self.message
-        raise StopValidation(message)
+        # Если есть совпадения, то валидация провалена
+        if len(matches) != 0:
+            self.stop_validation(self.UNIQUE_ERROR_MESSAGE.format(
+                column_name=column_name))
 
     def get_column_name(self, *args):
         if self.column_name is not None:

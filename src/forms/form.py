@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 
-from src.forms.validators import Unique
+from src.validators import Unique
 
 
 class Form(FlaskForm):

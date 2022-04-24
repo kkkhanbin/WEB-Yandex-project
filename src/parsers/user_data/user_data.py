@@ -2,7 +2,7 @@ from flask_restful import reqparse
 from email_validator import validate_email
 
 from src.data.models import User
-from src.forms.validators import Unique, ArgumentValidator
+from src.validators import Unique, ArgumentValidator
 
 
 class UserDataParser(reqparse.RequestParser):

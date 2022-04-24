@@ -1,7 +1,7 @@
 from ..resource import RestResource
 from src.data import session
 from src.data.models import User
-from src.data.resources.parsers import UserDataParser
+from src.parsers import UserDataParser
 from src.data.models.validators import ModelNotFound
 
 

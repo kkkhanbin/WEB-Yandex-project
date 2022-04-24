@@ -18,11 +18,12 @@
     </div>
 
     <div class="col-sm-6 col-md-8">
-        <h2>Карта мира</h2>
+        <h2 class="margin-vertical">Карта мира</h2>
         <img src="{{ world_map }}" class="rounded" alt="Здесь должна была быть карта мира">
     </div>
 
     <div class="col-6 col-md-4">
+        <h2 class="margin-vertical">Настройка карты</h2>
         <form action="" method="post">
             {{ form.hidden_tag() }}
 
@@ -30,6 +31,27 @@
                 {{ form.l.label(class='col-sm-2 col-form-label') }}
                 <div class="col-sm-10">
                     {{ form.l(class='form-control') }}
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                {{ form.longitude.label(class='col-sm-2 col-form-label') }}
+                <div class="col-sm-10">
+                    {{ form.longitude(class='form-control', value=map_params['ll'].split(',')[0]) }}
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                {{ form.latitude.label(class='col-sm-2 col-form-label') }}
+                <div class="col-sm-10">
+                    {{ form.latitude(class='form-control', value=map_params['ll'].split(',')[1]) }}
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                {{ form.z.label(class='col-sm-2 col-form-label') }}
+                <div class="col-sm-10">
+                    {{ form.z(class='form-control', value=map_params['z']) }}
                 </div>
             </div>
 

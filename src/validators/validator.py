@@ -1,9 +1,13 @@
 from abc import ABC
 
+from wtforms.validators import StopValidation
+
 
 class Validator(ABC):
     """
     Кастомный валидатор полей форм или простых значений
+
+    Все валидаторы никак не меняют передаваемое значение при валидации
     """
 
     # Типы объектов валидации
@@ -11,8 +15,8 @@ class Validator(ABC):
     VALIDATION_ARGUMENT_TYPE = 'argument'
 
     # Сообщения ошибок
-    COLUMN_NAME_ERROR_MESSAGE = \
-        'Невозможно определить название колонки для валидации'
+    DEFAULT_VALIDATION_ERROR_MESSAGE = 'Произошла ошибка при валидации'
+    INCORRECT_TYPE_MESSAGE = 'Неверный тип аргумента'
 
     def __init__(self, message=None, type=VALIDATION_FIELD_TYPE):
         """
@@ -51,3 +55,9 @@ class Validator(ABC):
         validation_data = args[1].data \
             if self.type == self.VALIDATION_FIELD_TYPE else args[0]
         return validation_data
+
+    def stop_validation(self, message: str = None):
+        if self.message is None:
+            message = self.DEFAULT_VALIDATION_ERROR_MESSAGE
+
+        raise StopValidation(message)
