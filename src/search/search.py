@@ -1,5 +1,6 @@
 from .results.results import Results
 from .results.__all_results import ALL_RESULTS
+from src.config.utils import default
 
 
 class Search:
@@ -21,8 +22,7 @@ class Search:
         :return: список результатов
         """
 
-        if searchers is None:
-            searchers = ALL_RESULTS
+        searchers = default(searchers, ALL_RESULTS)
 
         # Все результаты поиска
         results = Results(text)

@@ -6,6 +6,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 
 from src.data.db_session import SqlAlchemyBase
 from src.data.models.model import Model
+from src.config.utils import default
 
 
 class Apikey(Model, SqlAlchemyBase):
@@ -45,8 +46,7 @@ class Apikey(Model, SqlAlchemyBase):
     def load_fields(
             self, source: FlaskForm or dict, owner=None, load_apikey=True,
             load_owner=True):
-        if owner is None:
-            owner = current_user
+        owner = default(owner, current_user)
 
         if isinstance(source, FlaskForm):
             if load_apikey:

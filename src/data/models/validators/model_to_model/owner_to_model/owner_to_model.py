@@ -1,6 +1,7 @@
 from flask_login import current_user
 
 from ..model_to_model import ModelToModel
+from src.config.utils import default
 
 
 class OwnerToModel(ModelToModel):
@@ -8,7 +9,7 @@ class OwnerToModel(ModelToModel):
 
     def __init__(self, model, owner_column: str = 'owner',
                  user=None, *args, **kwargs):
-        user = current_user if user is None else user
+        user = default(user, current_user)
 
         models = [
             {'model': user, 'columns': ['id']},

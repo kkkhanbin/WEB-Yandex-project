@@ -2,6 +2,7 @@ from flask import abort
 from werkzeug.exceptions import Forbidden
 
 from ..validator import Validator
+from src.config.utils import default
 
 
 class ModelToModel(Validator):
@@ -35,7 +36,7 @@ class ModelToModel(Validator):
 
         super().__init__(*args, **kwargs)
 
-        models = [] if models is None else models
+        models = default(models, [])
 
         self.models = models
 

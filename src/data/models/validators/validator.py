@@ -1,5 +1,7 @@
 from abc import abstractmethod
 
+from src.config.utils import default
+
 
 class Validator:
     """
@@ -11,8 +13,7 @@ class Validator:
 
     @abstractmethod
     def __init__(self, message=None) -> None:
-        if message is None:
-            message = self.ABORT_MESSAGE
+        message = default(message, self.ABORT_MESSAGE)
 
         self.message = message
 

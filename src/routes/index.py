@@ -41,7 +41,8 @@ def index():
     world_map = Static.get(params=map_params)
     if not world_map:
         world_map = Static.get(params=DEFAULT_MAP_PARAMS)
+    url = world_map.url if not world_map is None else ''
 
     return render_template(
         'index.html', title='Adventure Time', search_form=SearchForm(),
-        world_map=world_map.url, form=form, map_params=map_params)
+        world_map=url, form=form, map_params=map_params)

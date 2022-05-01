@@ -3,6 +3,8 @@ from flask_restful.reqparse import Namespace
 from wtforms import Field
 from sqlalchemy_serializer import SerializerMixin
 
+from src.config.utils import default
+
 
 class Model(SerializerMixin):
     # Сообщения
@@ -72,8 +74,7 @@ class Model(SerializerMixin):
         ее значение = значению
         :return list: список найденных моделей
         """
-        if model is None:
-            model = cls
+        model = default(model, cls)
 
         for column_name, column_value in columns.items():
             fields = session.query(model).filter(

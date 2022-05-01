@@ -1,9 +1,9 @@
 import requests
 
-from src.api.api import Api, UseApikey
+from src.api.api import UseApikey
 
 
-class Geocoder(UseApikey, Api):
+class Geocoder(UseApikey):
     URL = 'http://geocode-maps.yandex.ru/1.x/'
 
     def get(self, params: dict = None, headers: dict = None) \
@@ -16,23 +16,23 @@ class Geocoder(UseApikey, Api):
     @classmethod
     def get_pos(cls, response: requests.Response) -> tuple or None:
         if not response:
-            return
+            return 0, 0
 
-        json_response = response.json()
-        features = \
-            json_response['response']['GeoObjectCollection']['featureMember']
+        features = cls.get_features(response)
 
-        if len(features) == 0 or not response:
-            return
+        if len(features) == 0:
+            return 0, 0
 
-        geocode = json_response['response']['GeoObjectCollection'][
-            'featureMember'][0]['GeoObject']
+        geocode = features[0]['GeoObject']
         geocode_pos = tuple(map(float, geocode['Point']['pos'].split()))
 
         return geocode_pos
 
     @classmethod
     def get_features(cls, response: requests.Response) -> list:
+        if not response:
+            return []
+
         json_response = \
             response.json()['response']['GeoObjectCollection']['featureMember']
         return json_response

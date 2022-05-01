@@ -3,6 +3,8 @@ from abc import ABC
 from flask_wtf import FlaskForm
 from wtforms.validators import StopValidation
 
+from src.config.utils import default
+
 
 class Validator(ABC):
     """
@@ -25,7 +27,7 @@ class Validator(ABC):
         для валидации поля из формы и argument - для аргумента из парсера
         """
 
-        self.message = message
+        self.message = default(message, self.DEFAULT_VALIDATION_ERROR_MESSAGE)
         self.type = type
 
         self.field_flags = {'required': True}
@@ -54,7 +56,5 @@ class Validator(ABC):
         return args[0]
 
     def stop_validation(self, message: str = None):
-        if message is None:
-            message = self.DEFAULT_VALIDATION_ERROR_MESSAGE
-
+        message = default(message, self.message)
         raise StopValidation(message)
