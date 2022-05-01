@@ -17,9 +17,18 @@ from .profile.develop.develop import develop
 from .profile.develop.apikey.delete.delete import apikey_delete
 from .profile.develop.apikey.add.add import apikey_add
 from .profile.develop.apikey.edit.edit import apikey_edit
+from .places.places import places
+from .places.add.add import place_add
+from .places.edit.edit import place_edit
+from .places.delete.delete import place_delete
+from .places.place.place import place
+from .places.place.delete.delete import place_media_delete
+from .places.place.download.download import place_media_download
 
 __all__ = (
     'routes_bp', 'index', 'favicon', 'register', 'logout', 'login', 'profile',
     'profile_edit', 'results', 'about', 'profile_delete', 'develop',
-    'apikey_delete', 'apikey_add', 'apikey_edit'
+    'apikey_delete', 'apikey_add', 'apikey_edit', 'places', 'place_add',
+    'place_edit', 'place_delete', 'place', 'place_media_delete',
+    'place_media_download'
 )

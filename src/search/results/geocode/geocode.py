@@ -7,7 +7,7 @@ class GeocodeResult(Result):
 
     @classmethod
     def search(cls, text: str) -> Results:
-        response = Geocoder.get({'geocode': text, 'format': 'json'})
+        response = Geocoder.get({'geocode': text})
         features = Geocoder.get_features(response)
 
         return cls.pack_results(

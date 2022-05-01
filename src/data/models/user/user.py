@@ -1,7 +1,5 @@
 import os
 
-from PIL import Image
-
 from flask_wtf import FlaskForm
 from flask_login import UserMixin
 
@@ -9,12 +7,13 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from sqlalchemy import Column, Integer, String
 
-from src.config.constants import AVATAR_PATH
+from src.config.constants import AVATAR_PATH, PROFILE_PATH
 from src.data.db_session import SqlAlchemyBase
 from src.data.models.model import Model
+from src.data.models.use_files import UseFiles
 
 
-class User(Model, SqlAlchemyBase, UserMixin):
+class User(Model, UseFiles, SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
 
     # Таблица
@@ -31,6 +30,9 @@ class User(Model, SqlAlchemyBase, UserMixin):
         0: [0],
         1: [0, 1]
     }
+
+    # Логин-колонки
+    LOGIN_COLUMNS = ['id', 'nickname', 'email']
 
     @property
     def apikey_access_levels(self) -> list:
@@ -65,7 +67,6 @@ class User(Model, SqlAlchemyBase, UserMixin):
         """
 
         if data:
-            self.create_dir(self)
             self.save_image(data, os.path.join(
                 *AVATAR_PATH).format(profile_id=self.id))
 
@@ -82,36 +83,16 @@ class User(Model, SqlAlchemyBase, UserMixin):
 
     @classmethod
     def find(cls, session, key):
-        return super()._find(session, key, 'id', 'nickname', 'email')
+        return super()._find(session, key, *cls.LOGIN_COLUMNS)
 
-    @staticmethod
-    def create_dir(user) -> None:
-        """
-        Создание директории для файлов пользователя
+    @property
+    def profile_path(self) -> str:
+        profile_path = os.path.join(*PROFILE_PATH).format(
+            profile_id=self.id)
+        return profile_path
 
-        :param user: пользователь, которому нужно создать директорию
-        :return: None
-        """
+    def create_profile_dirs(self) -> None:
+        self.create_dir(self.profile_path)
 
-        upload_path = os.path.join(
-            'static', 'upload', 'profiles', str(user.id))
-        if not os.path.exists(upload_path):
-            os.makedirs(upload_path)
-
-    @staticmethod
-    def save_image(data, destiny: str) -> None:
-        """
-        Сохранение фотографии
-
-        Пришлось прибегнуть к способу через библиотеку PIL, так как встроенный
-        во flask метод data.save() работал неккоректно, т.е. изображение
-        сохранялось побитым и ни я, ни flask не могли его открыть
-
-        :param data: любые данные фото, которые можно открыть через
-        PIL.Image.open()
-        :param destiny: путь до сохраняемого файла
-        :return: None
-        """
-
-        img = Image.open(data)
-        img.save(destiny)
+    def delete_profile_dirs(self) -> None:
+        self.delete_file(self.profile_path)

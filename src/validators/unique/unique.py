@@ -1,3 +1,5 @@
+from flask_wtf import FlaskForm
+
 from src.validators.validator import Validator
 from src.data import session, SqlAlchemyBase
 
@@ -64,7 +66,7 @@ class Unique(Validator):
         if self.column_name is not None:
             column_name = self.column_name
         else:
-            if self.type == self.VALIDATION_FIELD_TYPE:
+            if isinstance(args[0], FlaskForm):
                 column_name = args[1].name
             else:
                 raise ValueError(self.COLUMN_NAME_ERROR_MESSAGE)

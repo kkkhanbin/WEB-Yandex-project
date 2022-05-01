@@ -28,7 +28,6 @@ class UserDataParser(reqparse.RequestParser):
                 arg_name, **unique_kwargs,
                 type=ArgumentValidator(Unique(
                     User, column_name=arg_name,
-                    type=Unique.VALIDATION_ARGUMENT_TYPE,
                     except_values=except_values[arg_name]), *validators))
 
         self.add_argument('password', required=True)

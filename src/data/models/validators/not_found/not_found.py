@@ -13,6 +13,6 @@ class ModelNotFound(Validator):
         self.model = model
 
     def __call__(self) -> None:
-        if self.model is None or (
-                isinstance(self.model, list) and len(self.model) == 0):
+        if self.model is None or \
+                (isinstance(self.model, list) and len(self.model) == 0):
             abort(NotFound.code, description=self.message)

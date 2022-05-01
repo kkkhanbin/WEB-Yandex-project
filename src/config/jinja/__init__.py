@@ -1,6 +1,6 @@
 from jinja2 import Environment
 
-from .tests.tests import file_exists
+from .tests.tests import file_exists, is_dir
 
 
 def add_tests(env: Environment, tests: dict) -> None:
@@ -16,7 +16,8 @@ def add_tests(env: Environment, tests: dict) -> None:
 
 
 TESTS = {
-    'file_exists': file_exists
+    'file_exists': file_exists,
+    'is_dir': is_dir
 }
 
 __all__ = (

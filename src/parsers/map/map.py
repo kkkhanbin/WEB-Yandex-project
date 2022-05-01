@@ -12,7 +12,7 @@ class MapParser(reqparse.RequestParser):
             required=False,
             location='args',
             type=ArgumentValidator(
-                Range(-180, 180, type=Range.VALIDATION_ARGUMENT_TYPE)),
+                Range(-180, 180)),
             default=0
         )
 
@@ -21,7 +21,7 @@ class MapParser(reqparse.RequestParser):
             required=False,
             location='args',
             type=ArgumentValidator(
-                Range(-90, 90, type=Range.VALIDATION_ARGUMENT_TYPE)),
+                Range(-90, 90)),
             default=0
         )
 
@@ -40,4 +40,11 @@ class MapParser(reqparse.RequestParser):
             location='args',
             choices=['sat', 'map', 'sat,skl'],
             default='sat'
+        )
+
+        self.add_argument(
+            'pt',
+            required=False,
+            location='args',
+            default=[]
         )

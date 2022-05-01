@@ -15,6 +15,8 @@ def delete(login):
 
     form = DeleteProfileForm()
     if form.validate_on_submit():
+        user.delete_profile_dirs()
+
         session.delete(user)
         session.commit()
         return redirect('/logout')

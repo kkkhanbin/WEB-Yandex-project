@@ -24,15 +24,13 @@ class Model(SerializerMixin):
         for column_name in source:
             # Если проверяемое поле - одна из колонок таблицы
             if column_name in self.__table__.columns.keys():
-                self.__setattr__(
-                    column_name,
-                    source[column_name])
+                setattr(self, column_name, source[column_name])
 
         # Все прошло успешно, возвращаем себя
         return self
 
     @classmethod
-    def convert_in_dict(cls, source: FlaskForm or dict):
+    def convert_in_dict(cls, source: FlaskForm or dict or Namespace):
         source_dict = {}
 
         # Парсинг Namespace
@@ -48,7 +46,7 @@ class Model(SerializerMixin):
             # Конвертирование полей формы из Field в Field.data и в обычный
             # словарь
             for column_name in source.__dict__:
-                column = source.__getattribute__(column_name)
+                column = getattr(source, column_name)
                 if isinstance(column, Field):
                     source_dict[column_name] = column.data
 
@@ -115,7 +113,7 @@ class Model(SerializerMixin):
             return None
 
         # Если найденных моделей больше 1
-        if len(response) > 1:
+        elif len(response) > 1:
             return response
 
         # Если найдена всего одна модель

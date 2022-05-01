@@ -7,7 +7,7 @@
 <div class="search-result-in row g-0">
     {% set pos = feature['GeoObject']['Point']['pos'].split() %}
 
-    <a href="/?l=map&z=10&lon={{ pos[0] }}&lat={{ pos[1] }}">
+    <a href="/?l=map&z=10&lon={{ pos[0] }}&lat={{ pos[1] }}&pt={{ pos[0] }},{{ pos[1] }},pm2rdm">
         <div class="col-sm-2 col-md-6">
             {{ feature['GeoObject']['metaDataProperty']['GeocoderMetaData']['Address']['formatted'] }}
         </div>

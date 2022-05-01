@@ -25,6 +25,7 @@ def register():
         session.commit()
 
         # Сохранение фото профиля
+        user.create_profile_dirs()
         user.save_avatar_image(form.avatar_image.data)
 
         # Если включена галочка на вход после регистрации

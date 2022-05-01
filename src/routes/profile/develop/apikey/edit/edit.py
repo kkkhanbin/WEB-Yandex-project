@@ -6,7 +6,7 @@ from src.data.models import User, Apikey
 from src.data import session
 from src.forms import AddApikeyForm, SearchForm
 from src.data.models.validators import ModelNotFound, UserUnauthorized, \
-    UserToUser, UserToApikey, Blocked
+    UserToUser, Blocked, OwnerToModel
 
 
 @routes_bp.route('/profile/<login>/develop/<int:apikey_id>/edit',
@@ -17,11 +17,10 @@ def apikey_edit(login, apikey_id):
     User.validate(UserUnauthorized(), ModelNotFound(user), UserToUser(user))
 
     # Токен
-    apikey = session.query(Apikey).get(apikey_id)
+    apikey = Apikey.find(session, apikey_id)
     Apikey.validate(
-        ModelNotFound(apikey), UserToApikey(user, apikey),
-        Blocked(
-            apikey, 'Этот API-ключ заблокирован. Его нельзя редактировать'))
+        ModelNotFound(apikey), OwnerToModel(apikey, user=user),
+        Blocked(apikey, Apikey.BLOCKED_MESSAGE))
 
     # Форма
     form = AddApikeyForm()

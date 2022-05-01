@@ -6,7 +6,7 @@ class BaseConfig:
     JSON_AS_ASCII = False
     TRAP_HTTP_EXCEPTIONS = True
     UPLOAD_FOLDER = os.path.join('static', 'upload')
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 мегабайт
+    MAX_CONTENT_SIZE = 16 * 1024 * 1024  # 16 мегабайт
 
 
 class ProductionConfig(BaseConfig):

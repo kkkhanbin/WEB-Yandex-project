@@ -1,5 +1,6 @@
 from abc import ABC
 
+from flask_wtf import FlaskForm
 from wtforms.validators import StopValidation
 
 
@@ -10,15 +11,11 @@ class Validator(ABC):
     Все валидаторы никак не меняют передаваемое значение при валидации
     """
 
-    # Типы объектов валидации
-    VALIDATION_FIELD_TYPE = 'field'
-    VALIDATION_ARGUMENT_TYPE = 'argument'
-
     # Сообщения ошибок
     DEFAULT_VALIDATION_ERROR_MESSAGE = 'Произошла ошибка при валидации'
     INCORRECT_TYPE_MESSAGE = 'Неверный тип аргумента'
 
-    def __init__(self, message=None, type=VALIDATION_FIELD_TYPE):
+    def __init__(self, message=None):
         """
         Инициализация валидатора
 
@@ -52,12 +49,12 @@ class Validator(ABC):
         pass
 
     def get_validation_data(self, *args):
-        validation_data = args[1].data \
-            if self.type == self.VALIDATION_FIELD_TYPE else args[0]
-        return validation_data
+        if isinstance(args[0], FlaskForm):
+            return args[1].data
+        return args[0]
 
     def stop_validation(self, message: str = None):
-        if self.message is None:
+        if message is None:
             message = self.DEFAULT_VALIDATION_ERROR_MESSAGE
 
         raise StopValidation(message)

@@ -6,7 +6,7 @@ from src.routes import routes_bp
 from src.forms import SearchForm, EditMapForm
 from src.api import Static
 
-DEFAULT_MAP_PARAMS = {'l': 'map', 'll': '0,0', 'z': '1'}
+DEFAULT_MAP_PARAMS = {'l': 'map', 'll': '0,0', 'z': '1', 'pt': ''}
 
 
 @routes_bp.route('/', methods=['GET', 'POST'])
@@ -34,7 +34,8 @@ def index():
         map_params = {
             'l': map_args.l,
             'll': f'{map_args.lon},{map_args.lat}',
-            'z': map_args.z
+            'z': map_args.z,
+            'pt': map_args.pt
         }
 
     world_map = Static.get(params=map_params)

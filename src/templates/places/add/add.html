@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+    Добавление посещенного места
+</h1>
+
+<form action="" method="post" class="form-float" enctype="multipart/form-data">
+    {{ form.csrf_token() }}
+
+    <div class="errors">
+        {% for key in form.errors %}
+            <div class="alert alert-danger" role="alert">
+                {{form.errors[key]|join(' | ')}}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3 row">
+        {{ form.name.label(class='col-sm-2 col-form-label') }}
+        <div class="col-sm-10">
+            {{ form.name(class='form-control') }}
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        {{ form.description.label(class='col-sm-2 col-form-label') }}
+        <div class="col-sm-10">
+            {{ form.description(class='form-control') }}
+        </div>
+    </div>
+
+    {{ form.submit(type="submit", class="form-control btn btn-success") }}
+</form>
+
+<a href="/places/{{ user.nickname }}" class="form-control btn btn-secondary margin-vertical">Назад</a>
+
+{% endblock %}

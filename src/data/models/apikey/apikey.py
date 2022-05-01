@@ -19,6 +19,9 @@ class Apikey(Model, SqlAlchemyBase):
     access_level = Column(Integer, nullable=False, server_default='0')
     block = Column(Boolean, nullable=False, server_default='0')
 
+    # Сообщения ошибок
+    BLOCKED_MESSAGE = 'Этот API-ключ заблокирован. Его нельзя редактировать'
+
     def check_apikey(self, apikey: str) -> bool:
         """
         Функция для проверки переданного API-ключа на соответствие с
@@ -56,7 +59,7 @@ class Apikey(Model, SqlAlchemyBase):
             if load_owner:
                 source['owner'] = owner.id
 
-        super().load_fields(source)
+        return super().load_fields(source)
 
     @classmethod
     def find(cls, session, key):

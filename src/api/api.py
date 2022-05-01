@@ -9,8 +9,7 @@ class Api(ABC):
     Класс для взаимодействия с другими API
     """
 
-    @classmethod
-    def get(cls, params: dict = None, headers: dict = None) \
+    def get(self, params: dict = None, headers: dict = None) \
             -> requests.Response:
         """
         Получение результата GET-запроса на URL API-класса
@@ -23,7 +22,7 @@ class Api(ABC):
         params = {} if params is None else params
         headers = {} if headers is None else headers
 
-        return requests.get(cls.URL, params=params, headers=headers)
+        return requests.get(self.URL, params=params, headers=headers)
 
     @classmethod
     def create_url(cls, url=None, params: dict = None) -> str:

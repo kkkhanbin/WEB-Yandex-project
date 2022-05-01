@@ -22,6 +22,7 @@ def edit(login):
         session.commit()
 
         # Сохранение фото профиля
+        user.create_profile_dirs()
         user.save_avatar_image(form.avatar_image.data)
 
         # Успешное окончание редактирования, пересылаем пользователя

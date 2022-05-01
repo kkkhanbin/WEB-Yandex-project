@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Посещенные места пользователя {{ user.nickname }}</h1>
+
+<h2 class="text-center">Посещенные места</h2>
+
+<div>
+    {% if forbidden is false %}
+        {% if places|length > 0 %}
+            {% for place in places %}
+                {% set place_name = place.name if place.name != None and place.name != '' else 'Нет названия' %}
+
+                <div class="border rounded item-outer">
+                    <a href="/places/{{ user.nickname }}/{{ place.id }}" class="link">
+                        <div class="item-inner">
+                            <h3>{{ place_name }}</h3>
+                            <p>
+                                {{ place.description }}
+                            </p>
+
+                            <hr>
+
+                            <div class="inline-block">
+                                <a href="/places/{{ user.nickname }}/{{ place.id }}/edit" class="btn btn-primary inline-block">Изменить</a>
+                                <a href="/places/{{ user.nickname }}/{{ place.id }}/delete" class="btn btn-danger inline-block">Удалить</a>
+                                {% if place.lon and place.lat %}
+                                    <a href="/?l=map&z=10&lon={{ place.lon }}&lat={{ place.lat }}&pt={{ place.lon }},{{ place.lat }},pm2rdm" class="btn btn-success inline-block">Показать на карте</a>
+                                {% else %}
+                                    <a class="btn btn-success inline-block disabled">Невозможно определить место</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info" role="alert">У вас нет ни одного посещенного места</div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info" role="alert">Вы не можете смотреть посещенные места пользователя {{ user.nickname }}</div>
+    {% endif %}
+</div>
+
+<div class="margin-vertical">
+    <a href="/places/{{ current_user.nickname }}/add" class="form-control register-item btn btn-success">Добавить место</a>
+</div>
+
+{% endblock %}
