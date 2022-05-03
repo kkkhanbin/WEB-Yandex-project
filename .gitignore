@@ -1,0 +1,9 @@
+.git
+.idea
+venv
+notes
+docs/docs
+src/.env
+src/db/database.db
+src/static/img
+src/static/upload

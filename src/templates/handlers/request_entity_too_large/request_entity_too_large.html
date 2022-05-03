@@ -1,0 +1,16 @@
+{% extends "handlers/handler.html" %}
+
+{% block error %}
+
+{% set description = 'Слишком большой размер передаваемых файлов' %}
+
+<h3>
+    {{ description }}
+</h3>
+<p>
+    Попробуйте передать меньшее количество файлов. Код 413
+</p>
+
+<a href="/" class="btn btn-outline-secondary">Вернуться на главную</a>
+
+{% endblock %}

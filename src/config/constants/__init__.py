@@ -5,7 +5,7 @@ ALLOWED_EXTENSIONS = {
 FORBIDDEN_EXTENSIONS = {
     'exe'
 }
-MAX_PLACE_MEDIA_SIZE = 128 * 1024 * 1024  # 128 мегабайт
+MAX_PLACE_MEDIA_SIZE = 16 * 1024 * 1024  # 16 мегабайт
 
 # Пути
 STATIC_PATH = ['static']
