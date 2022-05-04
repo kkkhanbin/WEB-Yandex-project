@@ -1,3 +1,5 @@
+import logging
+
 from flask import redirect, render_template
 from flask_login import current_user, login_user
 
@@ -31,6 +33,9 @@ def register():
         # Если включена галочка на вход после регистрации
         if form.login.data:
             login_user(user, remember=True)
+
+        logging.info(
+            f'Произошла регистрация пользователя с id: {user.id}')
 
         return redirect('/')
 

@@ -1,3 +1,5 @@
+import logging
+
 import sqlalchemy as sa
 import sqlalchemy.orm as orm
 from sqlalchemy.orm import Session
@@ -26,6 +28,8 @@ def global_init(db_file):
     from . import __all_models
 
     SqlAlchemyBase.metadata.create_all(engine)
+
+    logging.info(f'Было подключено соединение по адресу {conn_str}')
 
 
 def create_session() -> Session:

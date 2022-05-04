@@ -1,3 +1,5 @@
+import logging
+
 from flask import jsonify
 
 from ..users_resource import UsersResource
@@ -6,6 +8,9 @@ from src.data import session
 
 class UserResource(UsersResource):
     def get(self, login):
+        logging.info(f'Был прислан GET-запрос на получение пользователя '
+                     f'по логину {login}')
+
         self.get_apikey()
         user = self.get_user(login)
 
@@ -13,6 +18,9 @@ class UserResource(UsersResource):
             only=('id', 'surname', 'name', 'nickname', 'email'))})
 
     def delete(self, login):
+        logging.info(f'Был прислан DELETE-запрос на удаление пользователя '
+                     f'по логину {login}')
+
         self.get_apikey(1)
 
         user = self.get_user(login)
@@ -22,8 +30,10 @@ class UserResource(UsersResource):
         return jsonify({'success': 'OK'})
 
     def put(self, login):
-        self.get_apikey(1)
+        logging.info(f'Был прислан PUT-запрос на обновление пользователя '
+                     f'по логину {login}')
 
+        self.get_apikey(1)
         user = self.get_user(login)
 
         # Преобразование всех значений в словаре в список с этими же значениями

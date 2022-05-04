@@ -6,7 +6,9 @@ handlers_bp = Blueprint('handlers', __name__)
 from .not_found.not_found import not_found
 from .forbidden.forbidden import forbidden
 from .unauthorized.unauthorized import unauthorized
+from .request_entity_too_large.request_entity_too_large import \
+    request_entity_too_large
 
 __all__ = (
-    'not_found', 'forbidden', 'unauthorized'
+    'not_found', 'forbidden', 'unauthorized', 'request_entity_too_large'
 )

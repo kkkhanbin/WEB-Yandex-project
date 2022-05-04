@@ -1,9 +1,13 @@
+import logging
+
 from .results.results import Results
 from .results.__all_results import ALL_RESULTS
 from src.config.utils import default
 
 
 class Search:
+    TOO_SHORT_REQ_LENGTH_MESSAGE = 'Слишком короткий поисковый запрос'
+
     @classmethod
     def search(cls, text: str, searchers: list = None) -> Results:
         """
@@ -12,15 +16,12 @@ class Search:
         Поиск осуществляется по пользователям и странам
 
         :param text: поисковый запрос
-        :param searchers: список классов-поисковиков с функцией search и
-        следующей сигнатурой:
-            :param str text: поисковый запрос
-            :return src.search.results.results.Results: список найденных
-            результатов
-
-            По умолчанию используются все поисковики из src.search.results
+        :param searchers: список классов-поисковиков с функцией search. По
+        умолчанию используются все поисковики из src.search.results
         :return: список результатов
         """
+
+        logging.info(f'Был произведен поиск по запросу: {text}')
 
         searchers = default(searchers, ALL_RESULTS)
 
@@ -29,8 +30,10 @@ class Search:
 
         # Обработка неккоректного запроса
         if len(text) < 1:
+            logging.error(f'При поиске по запросу: {text} произошла ошибка: '
+                          f'{cls.TOO_SHORT_REQ_LENGTH_MESSAGE}')
             results.errors['Short request text length'].append(
-                'Слишком короткий поисковый запрос')
+                cls.TOO_SHORT_REQ_LENGTH_MESSAGE)
             return results
 
         for searcher in searchers:

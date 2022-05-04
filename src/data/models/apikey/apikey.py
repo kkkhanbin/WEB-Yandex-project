@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from flask_login import current_user
@@ -41,7 +42,10 @@ class Apikey(Model, SqlAlchemyBase):
         :return: уникальный идентификатор ключа
         """
 
-        return str(uuid.uuid4())
+        apikey = str(uuid.uuid4())
+        logging.info(f'Был создан новый API-ключ: {apikey}')
+
+        return apikey
 
     def load_fields(
             self, source: FlaskForm or dict, owner=None, load_apikey=True,

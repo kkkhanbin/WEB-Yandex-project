@@ -1,7 +1,7 @@
+import src.config.log  # Простая активация модуля
 from .config import ProductionConfig, BaseConfig, TestingConfig
 from .blueprint import register_blueprints, BLUEPRINTS
 from .jinja import add_tests, TESTS
-import src.config.log  # Простая активация модуля
 from .login import login_manager
 from .rest import add_resources, RESOURCES
 

@@ -1,3 +1,5 @@
+import logging
+
 from flask import jsonify
 
 from ..users_resource import UsersResource
@@ -7,6 +9,9 @@ from src.data.models import User
 
 class UsersListResource(UsersResource):
     def get(self):
+        logging.info(
+            f'Был прислан GET-запрос на получение списка пользователей')
+
         self.get_apikey()
         users = session.query(User).all()
 
@@ -17,6 +22,9 @@ class UsersListResource(UsersResource):
         return jsonify({'users': users_data})
 
     def post(self):
+        logging.info(
+            f'Был прислан POST-запрос на добавление пользователя')
+
         self.get_apikey(1)
 
         user = User()

@@ -1,6 +1,8 @@
 from abc import ABC
-import requests
 import urllib
+import logging
+
+import requests
 
 from src.config.utils import default
 
@@ -23,8 +25,12 @@ class Api(ABC):
         params, headers = default(params, {}), default(headers, {})
 
         try:
+            logging.info(f'Был отослан GET-запрос по адресу {self.URL}')
             return requests.get(self.URL, params=params, headers=headers)
-        except requests.exceptions.ConnectionError:
+        except requests.exceptions.ConnectionError as error:
+            logging.error(
+                f'Произошла ошибка при посыле GET-запроса по адресу '
+                f'{self.URL} - {error}')
             return None
 
     @classmethod
