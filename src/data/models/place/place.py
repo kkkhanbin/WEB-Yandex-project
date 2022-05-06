@@ -6,7 +6,8 @@ from flask_wtf import FlaskForm
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
 from werkzeug.exceptions import RequestEntityTooLarge
 
-from src.config.constants import PLACE_MEDIA_FILES_PATH, MAX_PLACE_MEDIA_SIZE
+from src.config import config
+from src.config.constants import PLACE_MEDIA_FILES_PATH
 from src.data.db_session import SqlAlchemyBase
 from src.data.models.model import Model
 from src.data.models.use_files import UseFiles
@@ -14,6 +15,7 @@ from src.data.models import User
 from src.api import Geocoder
 from src.data.models.validators import OwnerToModel, UserToUser, \
     UserUnauthorized, ModelNotFound
+from src.config.utils import default
 
 
 class Place(Model, UseFiles, SqlAlchemyBase):
@@ -27,13 +29,17 @@ class Place(Model, UseFiles, SqlAlchemyBase):
     lon = Column(Float, nullable=True)
     lat = Column(Float, nullable=True)
 
+    # Сообщения ошибок
+    REQUEST_ENTITY_TOO_LARGE_MESSAGE = \
+        f'Размер вашего хранилища слишком большой. ' \
+        f'Максимальный размер - {config.MAX_PLACE_MEDIA_SIZE}'
+
     @classmethod
     def find(cls, session, key):
         return super()._find(session, key, 'id', 'owner', 'name')
 
-    def load_fields(self, owner=None, *args, **kwargs):
-        source = args[0]
-        owner = current_user if owner is None else owner
+    def load_fields(self, source, owner=None, *args, **kwargs):
+        owner = default(owner, current_user)
 
         owner_id = owner.id
         ll = Geocoder.get_pos(Geocoder.get({'geocode': source.name.data}))
@@ -47,7 +53,7 @@ class Place(Model, UseFiles, SqlAlchemyBase):
             elif isinstance(source, dict):
                 source[key] = value
 
-        return super().load_fields(*args, **kwargs)
+        return super().load_fields(source, *args, **kwargs)
 
     def save_place_media(self, data, user_id) -> None:
         data = [data] if not isinstance(data, list) else data
@@ -63,11 +69,10 @@ class Place(Model, UseFiles, SqlAlchemyBase):
                 profile_id=user_id, place_id=self.id)
             path = os.path.join(media_path, filename)
 
-            if self.get_size(media_path) > MAX_PLACE_MEDIA_SIZE:
+            if self.get_size(media_path) > config.MAX_PLACE_MEDIA_SIZE:
                 abort(
                     RequestEntityTooLarge.code,
-                    description=f'Размер вашего хранилища слишком большой. Ма'
-                                f'ксимальный размер - {MAX_PLACE_MEDIA_SIZE}')
+                    description=self.REQUEST_ENTITY_TOO_LARGE_MESSAGE)
 
             # Создание директория для вложенных папок
             self.create_dir(

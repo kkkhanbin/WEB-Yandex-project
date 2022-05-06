@@ -2,7 +2,7 @@ import logging
 
 from flask import jsonify
 
-from ..users_resource import UsersResource
+from src.data.resources.users.users_resource import UsersResource
 from src.data import session
 
 

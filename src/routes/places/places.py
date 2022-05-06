@@ -8,6 +8,8 @@ from src.forms import SearchForm
 from src.data.models.validators import ModelNotFound, UserToUser, \
     UserUnauthorized
 
+TITLE = 'Посещенные места пользователя {user_nickname}'
+
 
 @routes_bp.route('/places/<login>')
 def places(login):
@@ -24,5 +26,5 @@ def places(login):
 
     return render_template(
         'places/places.html', search_form=SearchForm(),
-        title=f'Посещенные места пользователя {user.nickname}', user=user,
+        title=TITLE.format(user_nickname=user.nickname), user=user,
         places=places, forbidden=forbidden)

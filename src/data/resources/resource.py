@@ -1,18 +1,19 @@
 from flask_restful import Resource
 
-from src.data.models import Apikey
+from src.data.models import Apikey, ModelNotFound, AccessLevel
 from src.data import session
-from src.data.models.validators import ModelNotFound, AccessLevel
 from src.parsers import ApikeyParser
 
 
 class RestResource(Resource):
     APIKEY_PARSER_ID = 'apikey'
 
-    def __init__(self):
-        self.parsers = {}
+    # Сообщения ошибок
+    APIKEY_NOT_FOUND_MESSAGE = 'Такого API-ключа не существует'
+    APIKEY_ACCESS_FORBIDDEN_MESSAGE = 'У вашего API-ключа не хватает доступа'
 
-        self.parsers[self.APIKEY_PARSER_ID] = ApikeyParser()
+    def __init__(self):
+        self.parsers = {self.APIKEY_PARSER_ID: ApikeyParser()}
 
     def get_apikey(self, access_level: int = 0) -> str:
         """
@@ -24,8 +25,8 @@ class RestResource(Resource):
         req_apikey = self.parsers[self.APIKEY_PARSER_ID].parse_args().apikey
         apikey = Apikey.find(session, req_apikey)
         Apikey.validate(
-            ModelNotFound(apikey, 'Такого API-ключа не существует'),
+            ModelNotFound(apikey, self.APIKEY_NOT_FOUND_MESSAGE),
             AccessLevel(
-                apikey, access_level, 'У вашего API-ключа не хватает доступа'))
+                apikey, access_level, self.APIKEY_ACCESS_FORBIDDEN_MESSAGE))
 
         return apikey

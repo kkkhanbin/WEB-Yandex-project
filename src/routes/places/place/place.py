@@ -8,6 +8,8 @@ from src.data.models import Place
 from src.data import session
 from src.forms import SearchForm, AddPlaceMediaForm
 
+TITLE = 'Посещенное место "{place_name}" пользователя {user_nickname}'
+
 
 @routes_bp.route(
     '/places/<login>/<int:place_id>',
@@ -23,7 +25,7 @@ def place(login, place_id, path):
     try:
         listdir = os.listdir(file_path)
     except FileNotFoundError:
-        abort(NotFound.code, description='Файл не найден')
+        abort(NotFound.code, description=Place.FILE_NOT_FOUND_MESSAGE)
     except NotADirectoryError:
         listdir = None
 
@@ -35,7 +37,7 @@ def place(login, place_id, path):
     return render_template(
         'places/place/place.html',
         search_form=SearchForm(),
-        title=f'Посещенное место "{place.name}" пользователя {user.nickname}',
+        title=TITLE.format(place_name=place.name, user_nickname=user.nickname),
         user=user,
         place=place,
         file_path=file_path,

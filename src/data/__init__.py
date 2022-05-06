@@ -1,8 +1,7 @@
-import os
-
+from src.config import config
 from src.data.db_session import create_session, global_init, SqlAlchemyBase
 
-global_init(os.environ.get('DB_PATH', 'db/database.db'))
+global_init(config.DB_PATH)
 session = create_session()
 
 __all__ = (

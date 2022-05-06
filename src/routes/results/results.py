@@ -6,6 +6,8 @@ from src.routes import routes_bp
 from src.search import Search
 from src.parsers import SearchParser
 
+TITLE = 'Результат поиска по запросу {text}'
+
 
 @routes_bp.route('/results', methods=['GET', 'POST'])
 def results():
@@ -27,5 +29,6 @@ def results():
     search_results = Search.search(request_text)
     return render_template(
         'results/results.html',
-        title=f'Результат поиска по запросу {request_text}', search_form=form,
+        title=TITLE.format(text=request_text),
+        search_form=form,
         results=search_results)

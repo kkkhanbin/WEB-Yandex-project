@@ -7,6 +7,7 @@ from src.forms import SearchForm, EditMapForm
 from src.api import Static
 
 DEFAULT_MAP_PARAMS = {'l': 'map', 'll': '0,0', 'z': '1', 'pt': ''}
+TITLE = 'Adventure Time'
 
 
 @routes_bp.route('/', methods=['GET', 'POST'])
@@ -41,8 +42,8 @@ def index():
     world_map = Static.get(params=map_params)
     if not world_map:
         world_map = Static.get(params=DEFAULT_MAP_PARAMS)
-    url = world_map.url if not world_map is None else ''
+    url = world_map.url if world_map is not None else ''
 
     return render_template(
-        'index.html', title='Adventure Time', search_form=SearchForm(),
+        'index.html', title=TITLE, search_form=SearchForm(),
         world_map=url, form=form, map_params=map_params)

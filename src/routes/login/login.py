@@ -8,6 +8,10 @@ from src.forms import SearchForm, LoginForm
 from src.data.models import User
 from src.data import session
 
+TITLE = 'Авторизация'
+INCORRECT_PASSWORD_ID = 'Incorrect password'
+INCORRECT_PASSWORD_MESSAGE = 'Неверный пароль или логин'
+
 
 @routes_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -32,8 +36,8 @@ def login():
                 return redirect('/')
 
         # Если логин не произошел, значит что-то пошло не так
-        errors['Incorrect password'].append('Неверный пароль или логин')
+        errors[INCORRECT_PASSWORD_ID].append(INCORRECT_PASSWORD_MESSAGE)
 
     return render_template(
-        'login/login.html', title='Авторизация', form=form,
+        'login/login.html', title=TITLE, form=form,
         search_form=SearchForm(), errors=errors)

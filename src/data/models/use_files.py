@@ -5,6 +5,8 @@ from PIL import Image
 
 
 class UseFiles:
+    FILE_NOT_FOUND_MESSAGE = 'Файл не найден'
+
     @staticmethod
     def create_dir(*paths: str) -> None:
         for path in paths:
@@ -31,6 +33,15 @@ class UseFiles:
 
     @staticmethod
     def secure_path(path: str) -> str:
+        """
+        Сканирование пути и создание нового, безопасного пути
+
+        Функция убирает все точки из пути
+
+        :param path:
+        :return:
+        """
+
         path_split = path.split('/')
         for i, filename in enumerate(path_split):
             if filename.count('.') == len(filename):

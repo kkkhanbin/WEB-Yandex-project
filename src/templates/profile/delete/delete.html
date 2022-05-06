@@ -13,6 +13,10 @@
 <form action="" method="post" class="form-float" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
 
+    <div class="alert alert-danger">
+        ВНИМАНИЕ: при удалении аккаунта стираются все его данные: API-ключи, посещенные места и сам профиль
+    </div>
+
     <div class="errors">
         {% for key in form.errors %}
             <div class="alert alert-danger" role="alert">

@@ -1,7 +1,12 @@
+import logging
+
+from flask import abort
+from werkzeug.exceptions import BadRequest
 from flask_wtf import FlaskForm
 from flask_restful.reqparse import Namespace
 from wtforms import Field
 from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy.exc import OperationalError, IntegrityError
 
 from src.config.utils import default
 
@@ -9,6 +14,15 @@ from src.config.utils import default
 class Model(SerializerMixin):
     # Сообщения
     INCORRECT_SOURCE_TYPE_MESSAGE = 'Неверный тип source'
+    INCORRECT_ACTION_MESSAGE = 'Неверный тип действия над моделью'
+    MODIFY_MODEL_ERROR = 'Возникла ошибка при внесении изменений. ' \
+                         'Перепроверьте корректность данных'
+
+    # Типы действий для изменения модели
+    ADD_MODEL = 'add'
+    EDIT_MODEL = 'edit'
+    DELETE_MODEL = 'delete'
+    MODEL_ACTIONS = [ADD_MODEL, EDIT_MODEL, DELETE_MODEL]
 
     def load_fields(self, source: FlaskForm or dict or Namespace):
         """
@@ -136,3 +150,63 @@ class Model(SerializerMixin):
 
         for validator in validators:
             validator()
+
+    @classmethod
+    def modify_model(cls, session, action: str, source=None, model=None):
+        """
+        Добавление, изменение или удаление модели в БД
+
+        :param session: сессия БД
+        :param source: источник данных для изменения или добавления модели
+        :param action: тип действия. См. Model.MODEL_ACTIONS
+        :param model: класс модели, которую нужно добавить или изменить. Для
+        добавления по умолчанию стоит текущий класс
+        :return: модель, если все прошло успешно или None
+        """
+
+        if action not in cls.MODEL_ACTIONS:
+            raise ValueError(cls.INCORRECT_ACTION_MESSAGE)
+
+        if action == cls.ADD_MODEL:
+            model = default(model, cls)()
+
+        if action in [cls.ADD_MODEL, cls.EDIT_MODEL]:
+            model.load_fields(source)
+
+        try:
+            if action == cls.ADD_MODEL:
+                session.add(model)
+            elif action == cls.DELETE_MODEL:
+                session.delete(model)
+            session.commit()
+        except (OperationalError, IntegrityError) as error:
+            logging.error(
+                f'При модификации {action} модели {model} из источника '
+                f'{source} произошла ошибка: {error}')
+            session.rollback()
+            abort(BadRequest.code, description=cls.MODIFY_MODEL_ERROR)
+        else:
+            logging.error(
+                f'Модификация {action} модели {model} из источника '
+                f'{source} прошла успешно')
+            return model
+
+    @classmethod
+    def add(cls, session, source, model=None):
+        model = default(model, cls)
+        logging.info(
+            f'Начало добавления модели {model} с источником {source}')
+        return cls.modify_model(
+            session, cls.ADD_MODEL, source=source, model=model)
+
+    @classmethod
+    def edit(cls, session, source, model):
+        logging.info(
+            f'Начало изменения модели {model} с источником {source}')
+        return cls.modify_model(
+            session, cls.EDIT_MODEL, source=source, model=model)
+
+    @classmethod
+    def delete(cls, session, model):
+        logging.info(f'Начало удаления модели {model}')
+        return cls.modify_model(session, cls.DELETE_MODEL, model=model)

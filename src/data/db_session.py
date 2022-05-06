@@ -17,7 +17,7 @@ def global_init(db_file):
         return
 
     if not db_file or not db_file.strip():
-        raise Exception("Необходимо указать файл базы данных.")
+        raise Exception('Необходимо указать файл базы данных.')
 
     conn_str = f'sqlite:///{db_file.strip()}?check_same_thread=False'
 

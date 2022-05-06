@@ -7,6 +7,8 @@ from src.forms import AddApikeyForm, SearchForm
 from src.data.models.validators import ModelNotFound, UserUnauthorized, \
     UserToUser
 
+TITLE = 'Добавление нового API-ключа'
+
 
 @routes_bp.route('/profile/<login>/develop/add', methods=['GET', 'POST'])
 def apikey_add(login):
@@ -17,16 +19,9 @@ def apikey_add(login):
     form.access_level.choices = user.apikey_access_levels
 
     if form.validate_on_submit():
-        # Создание токена
-        apikey = Apikey()
-        apikey.load_fields(form)
-
-        # Добавление
-        session.add(apikey)
-        session.commit()
-
+        Apikey.add(session, form)
         return redirect(f'/profile/{login}/develop')
 
     return render_template(
         'profile/develop/apikey/add/add.html', search_form=SearchForm(),
-        form=form, user=user)
+        form=form, user=user, title=TITLE)

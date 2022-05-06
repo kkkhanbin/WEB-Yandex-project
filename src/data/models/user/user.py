@@ -1,7 +1,8 @@
 import os
+import logging
 
 from flask_wtf import FlaskForm
-from flask_login import UserMixin
+from flask_login import UserMixin, login_user
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -72,7 +73,7 @@ class User(Model, UseFiles, SqlAlchemyBase, UserMixin):
 
     def load_fields(self, source: FlaskForm or dict, hash_password=True):
         # Хеширование пароля
-        if hash_password:
+        if hash_password and hasattr(source, 'password'):
             if isinstance(source, FlaskForm):
                 source.password.data = generate_password_hash(
                     source.password.data)
@@ -96,3 +97,18 @@ class User(Model, UseFiles, SqlAlchemyBase, UserMixin):
 
     def delete_profile_dirs(self) -> None:
         self.delete_file(self.profile_path)
+
+    @staticmethod
+    def register(session, form):
+        user = User.add(session, form)
+
+        # Сохранение фото профиля
+        user.create_profile_dirs()
+        user.save_avatar_image(form.avatar_image.data)
+
+        # Если включена галочка на вход после регистрации
+        if form.login.data:
+            login_user(user, remember=True)
+
+        logging.info(
+            f'Произошла регистрация пользователя с id: {user.id}')

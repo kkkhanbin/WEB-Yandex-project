@@ -8,6 +8,8 @@ from src.forms import SearchForm
 from src.data.models.validators import ModelNotFound, UserUnauthorized, \
     UserToUser
 
+TITLE = 'Кабинет разработчика пользователя {user_nickname}'
+
 
 @routes_bp.route('/profile/<login>/develop')
 def develop(login):
@@ -21,5 +23,5 @@ def develop(login):
 
     return render_template(
         'profile/develop/develop.html', search_form=SearchForm(),
-        title=f'Кабинет разработчика пользователя {user.nickname}', user=user,
+        title=TITLE.format(user_nickname=user.nickname), user=user,
         apikeys=apikeys, forbidden=forbidden)

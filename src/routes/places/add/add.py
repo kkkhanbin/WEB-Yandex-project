@@ -10,6 +10,8 @@ from src.data.models.validators import ModelNotFound, UserUnauthorized, \
     UserToUser
 from src.config.constants import PLACE_MEDIA_FILES_PATH
 
+TITLE = 'Добавление посещенного места'
+
 
 @routes_bp.route('/places/<login>/add', methods=['GET', 'POST'])
 def place_add(login):
@@ -19,12 +21,7 @@ def place_add(login):
     form = AddPlaceForm()
     if form.validate_on_submit():
         # Создание токена
-        place = Place()
-        place.load_fields(user, form)
-
-        # Добавление
-        session.add(place)
-        session.commit()
+        place = Place.add(session, form)
 
         # Создание директории для файлов посещенного места
         place.create_dir(os.path.join(*PLACE_MEDIA_FILES_PATH).format(
@@ -34,4 +31,4 @@ def place_add(login):
 
     return render_template(
         'places/add/add.html', search_form=SearchForm(), form=form, user=user,
-        title='Добавление посещенного места')
+        title=TITLE)

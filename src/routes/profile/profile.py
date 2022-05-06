@@ -6,6 +6,8 @@ from src.data import session
 from src.forms import SearchForm
 from src.data.models.validators import ModelNotFound
 
+TITLE = 'Профиль пользователя {user_nickname}'
+
 
 @routes_bp.route('/profile/<login>')
 def profile(login):
@@ -14,4 +16,4 @@ def profile(login):
 
     return render_template(
         'profile/profile.html', search_form=SearchForm(),
-        title=f'Профиль пользователя {user.nickname}', user=user)
+        title=TITLE.format(user_nickname=user.nickname), user=user)

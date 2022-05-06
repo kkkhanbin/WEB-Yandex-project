@@ -1,0 +1,20 @@
+{% extends "handlers/handler.html" %}
+
+{% block error %}
+
+{% if error.description != "The browser (or proxy) sent a request that this server could not understand." %}
+    {% set description = error.description %}
+{% else %}
+    {% set description = 'Неккоректный запрос' %}
+{% endif %}
+
+<h3>
+    {{ description }}
+</h3>
+<p>
+    Ошибка неккоректного запроса. Перепроверьте правильность введенных данных. Код 400
+</p>
+
+<a href="/" class="btn btn-outline-secondary">Вернуться на главную</a>
+
+{% endblock %}

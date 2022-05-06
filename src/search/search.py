@@ -6,6 +6,7 @@ from src.config.utils import default
 
 
 class Search:
+    TOO_SHORT_REQ_LENGTH_ID = 'Short request text length'
     TOO_SHORT_REQ_LENGTH_MESSAGE = 'Слишком короткий поисковый запрос'
 
     @classmethod
@@ -32,7 +33,7 @@ class Search:
         if len(text) < 1:
             logging.error(f'При поиске по запросу: {text} произошла ошибка: '
                           f'{cls.TOO_SHORT_REQ_LENGTH_MESSAGE}')
-            results.errors['Short request text length'].append(
+            results.errors[cls.TOO_SHORT_REQ_LENGTH_ID].append(
                 cls.TOO_SHORT_REQ_LENGTH_MESSAGE)
             return results
 

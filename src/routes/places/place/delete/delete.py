@@ -7,6 +7,8 @@ from src.routes import routes_bp
 from src.data.models import Place
 from src.data import session
 
+DELETE_ROOT_FOLDER_MESSAGE = 'Вы не можете удалить корневую папку'
+
 
 @routes_bp.route(
     '/places/<login>/delete/<int:place_id>', defaults={'path': '/'})
@@ -19,7 +21,7 @@ def place_media_delete(login, place_id, path):
         # Чтобы нельзя было удалять корневую папку медиа файлов
         if len(path) == 0:
             abort(Forbidden.code,
-                  description='Вы не можете удалить корневую папку')
+                  description=DELETE_ROOT_FOLDER_MESSAGE)
 
         path_split = os.path.split(path)
         back_path = os.path.join(*path_split[:-1])
@@ -29,6 +31,6 @@ def place_media_delete(login, place_id, path):
         place.delete_file(file_path)
 
     except FileNotFoundError:
-        abort(NotFound.code, description='Файл не найден')
+        abort(NotFound.code, description=Place.FILE_NOT_FOUND_MESSAGE)
 
     return redirect(f'/places/{user.nickname}/{place.id}{back_path}')

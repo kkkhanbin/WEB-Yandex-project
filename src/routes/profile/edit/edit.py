@@ -7,6 +7,8 @@ from src.forms import SearchForm, EditProfileForm
 from src.data.models.validators import ModelNotFound, UserUnauthorized, \
     UserToUser
 
+TITLE = 'Редактирование профиля пользователя {user_nickname}'
+
 
 @routes_bp.route('/profile/<login>/edit', methods=['GET', 'POST'])
 def edit(login):
@@ -18,11 +20,9 @@ def edit(login):
     form.add_unique_except_values(nickname=[user.nickname], email=[user.email])
 
     if form.validate_on_submit():
-        user.load_fields(form, hash_password=False)
-        session.commit()
+        User.edit(session, form, user)
 
         # Сохранение фото профиля
-        user.create_profile_dirs()
         user.save_avatar_image(form.avatar_image.data)
 
         # Успешное окончание редактирования, пересылаем пользователя
@@ -31,5 +31,5 @@ def edit(login):
 
     return render_template(
         'profile/edit/edit.html', search_form=SearchForm(),
-        title=f'Редактирование профиля пользователя {user.nickname}',
+        title=TITLE.format(user_nickname=user.nickname),
         user=user, form=form)

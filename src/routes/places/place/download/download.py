@@ -38,4 +38,4 @@ def place_media_download(login, place_id, path):
             return response
 
     except FileNotFoundError:
-        abort(NotFound.code, description='Файл не найден')
+        abort(NotFound.code, description=Place.FILE_NOT_FOUND_MESSAGE)

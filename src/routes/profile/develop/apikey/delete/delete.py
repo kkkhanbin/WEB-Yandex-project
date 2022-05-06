@@ -17,7 +17,6 @@ def apikey_delete(login, apikey_id):
     apikey = session.query(Apikey).get(apikey_id)
     Apikey.validate(ModelNotFound(apikey), OwnerToModel(apikey, user=user))
 
-    session.delete(apikey)
-    session.commit()
+    Apikey.delete(session, apikey)
 
     return redirect(f'/profile/{user.nickname}/develop')
